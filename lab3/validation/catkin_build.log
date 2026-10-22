@@ -1,0 +1,38 @@
+-------------------------------------------------------
+Profile:                     default
+Extending:        [explicit] /opt/ros/noetic
+Workspace:                   /home/han/lab3_ws
+-------------------------------------------------------
+Build Space:        [exists] /home/han/lab3_ws/build
+Devel Space:        [exists] /home/han/lab3_ws/devel
+Install Space:      [unused] /home/han/lab3_ws/install
+Log Space:          [exists] /home/han/lab3_ws/logs
+Source Space:       [exists] /home/han/lab3_ws/src
+DESTDIR:            [unused] None
+-------------------------------------------------------
+Devel Space Layout:          linked
+Install Space Layout:        None
+-------------------------------------------------------
+Additional CMake Args:       -DCMAKE_BUILD_TYPE=Release
+Additional Make Args:        -j2
+Additional catkin Make Args: None
+Internal Make Job Server:    True
+Cache Job Environments:      False
+-------------------------------------------------------
+Buildlisted Packages:        None
+Skiplisted Packages:         None
+-------------------------------------------------------
+Workspace configuration appears valid.
+-------------------------------------------------------
+[build] Found 8 packages in 0.0 seconds.                                       
+[build] Package table is up to date.                                           
+Starting >>> mav_msgs                     
+Finished <<< mav_msgs                      [ 8.2 seconds ]
+Starting >>> controller_pkg               
+Finished <<< controller_pkg                [ 1 minute and 18.4 seconds ]
+[build] Summary: All 2 packages succeeded!
+[build] Ignored: 6 packages were skipped or are skiplisted.
+[build] Warnings: None.
+[build] Abandoned: No packages were abandoned.
+[build] Failed: No packages failed.
+[build] Runtime: 1 minute and 27.0 seconds total.

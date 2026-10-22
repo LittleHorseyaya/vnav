@@ -1,0 +1,45 @@
+path: /home/han/lab4_results/race03/race.bag
+version: 2.0
+duration: 96.300000
+start: 13.360000
+end: 109.660000
+size: 1834662
+messages: 25126
+indexed: True
+compression: lz4
+uncompressed: 7059382
+compressed: 1511238
+types:
+    - type: geometry_msgs/PoseArray
+      md5: 916c28c5764443f268b296bb671b9d97
+    - type: nav_msgs/Odometry
+      md5: cd5e73d190d741a2f92e81eda573aca7
+    - type: rosgraph_msgs/Clock
+      md5: a9c97c1d230cfc112e270351a944ee47
+    - type: tesse_ros_bridge/CollisionStats
+      md5: c6cf75271bbaaafc8a8e7fb4896411d3
+    - type: tf2_msgs/TFMessage
+      md5: 94810edda583a504dfda3829e70d7eec
+    - type: trajectory_msgs/MultiDOFJointTrajectoryPoint
+      md5: 3ebe08d1abd5b65862d50e09430db776
+topics:
+    - topic: /clock
+      type: rosgraph_msgs/Clock
+      messages: 3869
+    - topic: /current_state
+      type: nav_msgs/Odometry
+      messages: 4810
+    - topic: /desired_state
+      type: trajectory_msgs/MultiDOFJointTrajectoryPoint
+      messages: 7283
+    - topic: /desired_traj_vertices
+      type: geometry_msgs/PoseArray
+      messages: 474
+    - topic: /tesse/collision
+      type: tesse_ros_bridge/CollisionStats
+      messages: 91
+    - topic: /tf
+      type: tf2_msgs/TFMessage
+      messages: 8599
+      connections: 2
+

@@ -1,0 +1,5 @@
+degree=1, terminal_velocity=None: P=t; J=1
+degree=2, terminal_velocity=None: P=t; J=1
+degree=3, terminal_velocity=None: P=t; J=1
+degree=2, terminal_velocity=-2: P=-3*t**2 + 4*t; J=4
+degree=3, terminal_velocity=-2: P=-15*t**3/4 + 9*t**2/2 + t/4; J=17/8

@@ -1,0 +1,22 @@
+<launch>
+  <!-- Launch trajectory generation node -->
+  <arg name="v_max" default="3"/>
+  <arg name="a_max" default="2"/>
+  <arg name="time_scale" default="1.3"/>
+  <node name="trajectory_generation_node" pkg="trajectory_generation" type="trajectory_generation_node" output="screen">
+    <param name="v_max" value="$(arg v_max)"/>
+    <param name="a_max" value="$(arg a_max)"/>
+    <param name="time_scale" value="$(arg time_scale)"/>
+  </node>
+
+  <!-- Launch our controller -->
+  <node name="controller_node" pkg="controller_pkg" type="controller_node" />
+
+  <!-- TODO: Copy your controller gains from lab 3 to here! -->
+  <param name="kx" type="double" value="1" />
+  <param name="kv" type="double" value="2" />
+  <param name="kr" type="double" value="4" />
+  <param name="komega" type="double" value="1" />
+  <param name="kx_z" type="double" value="4" />
+  <param name="kv_z" type="double" value="4" />
+</launch>

@@ -1,0 +1,492 @@
+{
+  "gates_reached": 12,
+  "gate_count": 12,
+  "elapsed_s": 92.71999999900001,
+  "planned_duration_s": 84.4682863783801,
+  "collision_messages": 91,
+  "stop_reason": "trajectory_finished",
+  "success": true,
+  "gate_tolerance_m": 0.65,
+  "gate_events": [
+    {
+      "gate": 1,
+      "ros_time": 20.899999999,
+      "elapsed_s": 5.659999998999998,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6097044793248939,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 2,
+      "ros_time": 27.199999999,
+      "elapsed_s": 11.959999998999999,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6364468358062279,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 3,
+      "ros_time": 34.84,
+      "elapsed_s": 19.6,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6480264596920398,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 4,
+      "ros_time": 43.38,
+      "elapsed_s": 28.14,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6299052306402917,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 5,
+      "ros_time": 51.0,
+      "elapsed_s": 35.76,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.632099864427363,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 6,
+      "ros_time": 56.82,
+      "elapsed_s": 41.58,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6431953118928972,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 7,
+      "ros_time": 63.92,
+      "elapsed_s": 48.68,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6411564395917754,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 8,
+      "ros_time": 69.939989999,
+      "elapsed_s": 54.699989999,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6463491829932166,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 9,
+      "ros_time": 76.359999999,
+      "elapsed_s": 61.119999998999994,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6367698693022863,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 10,
+      "ros_time": 83.75999,
+      "elapsed_s": 68.51999,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6284482584393825,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 11,
+      "ros_time": 91.78,
+      "elapsed_s": 76.54,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6306104138975189,
+      "plane_offset_m": null
+    },
+    {
+      "gate": 12,
+      "ros_time": 96.439989999,
+      "elapsed_s": 81.19998999900001,
+      "method": "center_reached_within_0.65m",
+      "distance_m": 0.6466178145249274,
+      "plane_offset_m": null
+    }
+  ],
+  "minimum_gate_distances_m": [
+    0.07189813586067424,
+    0.054922679128388725,
+    0.07417317906089779,
+    0.06529768205686924,
+    0.0660325740903685,
+    0.06020081227026721,
+    0.09263804111702663,
+    0.05340724412474343,
+    0.05677081336391123,
+    0.06640518716756963,
+    0.08466539336116029,
+    0.04782013592619719
+  ],
+  "collision_events": [
+    {
+      "ros_time": 15.32,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.359999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.4,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.419999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.46,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.48,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.5,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.519999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.539999998999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.56,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.58,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.599999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.619999999000001,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.64,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.66,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.679999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.699999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.72,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.74,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.759999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.779999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.8,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.82,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.839999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.859999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.88,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.9,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.919999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.939999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.96,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 15.98,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.019999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.039999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.059999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.079999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.1,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.12,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.14,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.16,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.179999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.199999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.219999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.239999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.28,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.3,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.32,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.339999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.359999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.379999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.399999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.42,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.46,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.48,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.5,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.519999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.539999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.559999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.6,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.62,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.64,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.66,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.679999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.699999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.719999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.739999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.76,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.78,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.8,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.82,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.839999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.859999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.879999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.899999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.96,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 16.98,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.0,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.019999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.039999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.079999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.1,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.12,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.14,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.16,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.179999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.199999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.219999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.239999999,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.26,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.28,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.3,
+      "object": "Floor_01"
+    },
+    {
+      "ros_time": 17.359999999,
+      "object": "Floor_01"
+    }
+  ],
+  "current_samples": 4784,
+  "desired_samples": 7204,
+  "rmse_m": 0.07229608360802446,
+  "max_error_m": 0.1397166895354463
+}

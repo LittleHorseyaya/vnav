@@ -1,0 +1,9 @@
+{
+  "samples": 2252,
+  "measurement": "ROS current_state vs latest desired_state",
+  "rmse_m": 0.2598994128922153,
+  "max_error_m": 0.7637347271347319,
+  "min_altitude_m": 1.236326,
+  "max_altitude_m": 1.948543,
+  "observed_ros_duration_s": 31.319999998999947
+}

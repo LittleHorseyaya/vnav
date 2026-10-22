@@ -1,0 +1,62 @@
+--------------------------------------------------------------------------------
+Profile:                     default
+Extending:        [explicit] /opt/ros/noetic
+Workspace:                   /home/han/lab4_ws
+--------------------------------------------------------------------------------
+Build Space:        [exists] /home/han/lab4_ws/build
+Devel Space:        [exists] /home/han/lab4_ws/devel
+Install Space:      [unused] /home/han/lab4_ws/install
+Log Space:          [exists] /home/han/lab4_ws/logs
+Source Space:       [exists] /home/han/lab4_ws/src
+DESTDIR:            [unused] None
+--------------------------------------------------------------------------------
+Devel Space Layout:          linked
+Install Space Layout:        None
+--------------------------------------------------------------------------------
+Additional CMake Args:       -DCMAKE_BUILD_TYPE=Release -DCATKIN_ENABLE_TESTING=ON
+Additional Make Args:        -j2
+Additional catkin Make Args: None
+Internal Make Job Server:    True
+Cache Job Environments:      False
+--------------------------------------------------------------------------------
+Buildlisted Packages:        None
+Skiplisted Packages:         None
+--------------------------------------------------------------------------------
+Workspace configuration appears valid.
+--------------------------------------------------------------------------------
+[build] Found 19 packages in 0.0 seconds.                                      
+[build] Package table is up to date.                                           
+Starting >>> catkin_simple                           
+Starting >>> mav_msgs                                
+Finished <<< catkin_simple                            [ 0.3 seconds ]
+Starting >>> eigen_catkin                            
+Finished <<< eigen_catkin                             [ 0.3 seconds ]
+Starting >>> glog_catkin                             
+Finished <<< glog_catkin                              [ 0.3 seconds ]
+Starting >>> eigen_checks                            
+Finished <<< eigen_checks                             [ 0.3 seconds ]
+Starting >>> mav_visualization                       
+Finished <<< mav_msgs                                 [ 2.0 seconds ]
+Starting >>> controller_pkg                          
+Finished <<< mav_visualization                        [ 1.7 seconds ]
+Finished <<< controller_pkg                           [ 2.0 seconds ]
+Starting >>> mav_planning_msgs                       
+Starting >>> nlopt                                   
+Finished <<< nlopt                                    [ 0.2 seconds ]
+Starting >>> planner_pkg                             
+Finished <<< mav_planning_msgs                        [ 1.7 seconds ]
+Starting >>> tesse_ros_bridge                        
+Finished <<< tesse_ros_bridge                         [ 2.7 seconds ]
+Starting >>> yaml_cpp_catkin                         
+Finished <<< planner_pkg                              [ 3.2 seconds ]
+Finished <<< yaml_cpp_catkin                          [ 0.2 seconds ]
+Starting >>> mav_trajectory_generation               
+Finished <<< mav_trajectory_generation                [ 0.8 seconds ]
+Starting >>> trajectory_generation                   
+Finished <<< trajectory_generation                    [ 5.3 seconds ]
+[build] Summary: All 14 packages succeeded!
+[build] Ignored: 5 packages were skipped or are skiplisted.
+[build] Warnings: None.
+[build] Abandoned: No packages were abandoned.
+[build] Failed: No packages failed.
+[build] Runtime: 15.3 seconds total.

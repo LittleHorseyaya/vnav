@@ -1,0 +1,23 @@
+# ROS / CMake generated workspaces
+/build/
+/devel/
+/install/
+/logs/
+.catkin_tools/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Local editor / Python / temporary artifacts
+__pycache__/
+*.py[cod]
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.bag.active
+
+# Simulator executables and unpacked Unity data are downloaded separately
+*.x86_64
+lab3_Data/
+lab4_Data/

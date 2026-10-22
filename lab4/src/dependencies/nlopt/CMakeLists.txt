@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.0.2)
+project(nlopt)
+find_package(catkin REQUIRED)
+find_path(SYSTEM_INCLUDE_DIR nlopt.hpp REQUIRED)
+find_library(SYSTEM_LIBRARY nlopt REQUIRED)
+catkin_package(INCLUDE_DIRS ${SYSTEM_INCLUDE_DIR} LIBRARIES ${SYSTEM_LIBRARY})

@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.0.2)
+project(yaml_cpp_catkin)
+find_package(catkin REQUIRED)
+find_path(SYSTEM_INCLUDE_DIR yaml-cpp/yaml.h REQUIRED)
+find_library(SYSTEM_LIBRARY yaml-cpp REQUIRED)
+catkin_package(INCLUDE_DIRS ${SYSTEM_INCLUDE_DIR} LIBRARIES ${SYSTEM_LIBRARY})
