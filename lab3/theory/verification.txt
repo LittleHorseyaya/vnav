@@ -1,0 +1,7 @@
+Exact symbolic checks (SymPy):
+det(F_a) = -16*a^2*c_f*c_d
+rank(F_a) = 4
+rank(F_b) = 3
+F_b row 4 + (c_d/a)*row 3 = zero
+Drag at R=I, v=(2,-1,0): (-0.4,0.1,0) N
+Compensation: (0.4,-0.1,0) N

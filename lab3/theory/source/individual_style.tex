@@ -1,0 +1,40 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=22mm,headheight=14pt]{geometry}
+\usepackage{amsmath,amssymb,graphicx,booktabs,tabularx,array}
+\usepackage{xcolor,listings,enumitem,microtype,fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[font=small,labelfont=bf]{caption}
+\captionsetup{hypcap=false}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={MIT VNAV Individual Deliverables},
+pdfauthor={yawangjiang}}
+\definecolor{navy}{HTML}{19394F}
+\definecolor{pale}{HTML}{F0F4F7}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\setlist[itemize]{leftmargin=1.5em,itemsep=3pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=3pt,topsep=3pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{navy}MIT VNAV - Individual}
+\fancyhead[R]{\small\color{navy}yawangjiang}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,
+breaklines=true,breakatwhitespace=false,showstringspaces=false,
+backgroundcolor=\color{pale},frame=single,rulecolor=\color{pale},
+xleftmargin=5pt,xrightmargin=5pt,framesep=5pt,aboveskip=7pt,belowskip=7pt}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ex}{\mathbf e_x}
+\newcommand{\ev}{\mathbf e_v}
+\newcommand{\eR}{\mathbf e_R}
+\newcommand{\eO}{\mathbf e_\Omega}
+\newcommand{\eThree}{\mathbf e_3}
+\newcommand{\Fdes}{\mathbf F_{\mathrm{des}}}
+\newcommand{\Fdrag}{\mathbf F_{\mathrm{drag}}}
+\newcommand{\repo}{https://github.com/LittleHorseyaya/vnav}

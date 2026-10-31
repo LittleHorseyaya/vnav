@@ -1,0 +1,128 @@
+\input{individual_style.tex}
+\hypersetup{pdftitle={MIT VNAV LAB3 - Individual Deliverable 2},pdfauthor={yawangjiang}}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries\color{navy}LAB3: Modelling and Control of UAVs}\par
+\vspace{6pt}
+{\large Individual Deliverable 2}\par
+\vspace{6pt}
+Submission account: \code{yawangjiang}\par
+October 31, 2026
+\end{center}
+
+\section{A. Structure of Quadrotors}
+Let $c_f>0$ and $c_d>0$ be the lift and yaw-reaction coefficients, $d>0$ the
+arm length, and $a=d c_f/\sqrt2$. Use an upward-$z$ body frame and the motor
+numbering for which the functional vehicle has the following wrench map:
+\begin{equation}
+\begin{bmatrix}f\\\tau_x\\\tau_y\\\tau_z\end{bmatrix}
+=F_a\mathbf u,\qquad
+F_a=\begin{bmatrix}
+c_f&c_f&c_f&c_f\\
+a&a&-a&-a\\
+-a&a&a&-a\\
+c_d&-c_d&c_d&-c_d
+\end{bmatrix}.
+\label{eq:fa}
+\end{equation}
+Here $u_i=\omega_i^2\geq0$ describes the positive lift-producing operating
+direction of each mounted propeller. The alternating yaw signs already encode
+the different positive physical spinning directions.
+
+For vehicle (a),
+\begin{equation}
+\det(F_a)=-16a^2c_fc_d\ne0,\qquad\operatorname{rank}(F_a)=4.
+\end{equation}
+Thus small changes of collective thrust and the three torques can be independently
+allocated around a feasible hover. Full rank alone does not guarantee feasibility
+for arbitrarily large commands under motor bounds.
+
+In vehicle (b), propellers 3 and 4 are changed and their spin directions are
+reversed. They continue to produce upward lift, but their yaw-reaction signs
+reverse. With the same numbering and frame,
+\begin{equation}
+F_b=\begin{bmatrix}
+c_f&c_f&c_f&c_f\\
+a&a&-a&-a\\
+-a&a&a&-a\\
+c_d&-c_d&-c_d&c_d
+\end{bmatrix}.
+\end{equation}
+Its fourth row is $-c_d/a$ times its third row. The first three rows remain
+independent, so
+\begin{equation}
+\boxed{\operatorname{rank}(F_b)=3,\qquad
+\tau_z=-\frac{c_d}{a}\tau_y=-\frac{\sqrt2c_d}{dc_f}\tau_y.}
+\end{equation}
+Therefore yaw torque is coupled to pitch torque for this convention. A different
+documented motor order can change the row signs or the named horizontal torque,
+but not the rank deficiency.
+
+For example, consider a level hover with zero angular velocity and a reference
+that holds position while requesting a yaw angular acceleration. Nonzero yaw
+torque necessarily produces the linked pitch torque, which tilts the thrust
+axis and disturbs horizontal position. Consequently vehicle (b) cannot generally
+track arbitrary independent references for $[x,y,z]$ and yaw. Some specially
+compatible motions can still be achieved.
+
+\clearpage
+\section{B. Compensation of the Specified Drag}
+The empirical body-frame force in the exercise is quadratic in each velocity
+component and acts against that component. Let
+\begin{equation}
+D=\operatorname{diag}(0.1,0.1,0.2),\qquad
+\mathbf v^b=R^\top\mathbf v,\qquad
+\mathbf F^b_{\mathrm{drag}}=-D\bigl(\mathbf v^b\odot|\mathbf v^b|\bigr),
+\end{equation}
+where $R$ maps body vectors to world vectors, $\odot$ is the componentwise
+product, and the absolute value is componentwise. A linear expression
+$-D\mathbf v^b$ would describe a different force model.
+
+The world-frame disturbance is
+\begin{equation}
+\mathbf F_{\mathrm{drag}}=R\mathbf F^b_{\mathrm{drag}}.
+\end{equation}
+With upward $z$, the translational dynamics are
+\begin{equation}
+m\dot{\mathbf v}=-mg\mathbf e_3+fR\mathbf e_3+\mathbf F_{\mathrm{drag}}.
+\end{equation}
+Define $\mathbf e_x=\mathbf x-\mathbf x_d$ and
+$\mathbf e_v=\mathbf v-\mathbf v_d$. If $K_x,K_v$ are acceleration-feedback
+gains, the nominal commanded force is
+\begin{equation}
+\mathbf F_0=m\left(\mathbf a_d+g\mathbf e_3-K_x\mathbf e_x-K_v\mathbf e_v\right).
+\end{equation}
+The model can be explicitly compensated by subtracting the estimated disturbance:
+\begin{align}
+\mathbf F_{\mathrm{comp}}
+&=\mathbf F_0-\widehat{\mathbf F}_{\mathrm{drag}}\\
+&=\mathbf F_0+RD\bigl(\mathbf v^b\odot|\mathbf v^b|\bigr)
+\quad\text{under the stated model.}
+\end{align}
+Use this compensated force consistently in both the desired thrust direction
+and scalar thrust projection:
+\begin{equation}
+\mathbf b_{3d}=\frac{\mathbf F_{\mathrm{comp}}}{\|\mathbf F_{\mathrm{comp}}\|},
+\qquad f=\mathbf F_{\mathrm{comp}}^\top R\mathbf e_3.
+\end{equation}
+The remaining desired body axes are constructed from $\mathbf b_{3d}$ and the
+desired yaw, as in the geometric controller.
+
+As a sign check, take $R=I$ and $\mathbf v=[2,-1,0]^\top$\,m/s. Then
+\begin{equation}
+\mathbf F_{\mathrm{drag}}=[-0.4,0.1,0]^\top\ \mathrm N,
+\qquad-\mathbf F_{\mathrm{drag}}=[0.4,-0.1,0]^\top\ \mathrm N.
+\end{equation}
+The commanded correction opposes the disturbance. In the ideal force-tracking
+limit with an exact drag model, the extra dynamics term is cancelled, reducing
+the disturbance that feedback must reject. Attitude tracking, model errors,
+sampling delay, and actuator limits can still produce nonzero tracking error.
+This is a modelling proposal, not a claim of an experimentally measured
+before/after improvement.
+
+\subsection*{Sources}
+MIT VNAV LAB3 exercise statement:
+\url{https://vnav.mit.edu/labs_2023/lab3/exercises.html}.\par
+T. Lee, M. Leok, and N. H. McClamroch, ``Geometric tracking control of a quadrotor
+UAV on SE(3),'' \emph{IEEE CDC}, 2010.
+\end{document}

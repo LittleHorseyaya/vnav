@@ -18,8 +18,9 @@ ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 
 ## 提交状态
 
-- LAB3：小组代码和飞行验证已整理；个人理论 Deliverable 1、2 尚未包含。
+- LAB3：小组代码和飞行验证已整理；已补齐 [个人题1 TXT](lab3/deliverable_1.txt) 和 [个人题2 PDF](lab3/deliverable_2.pdf)。
 - LAB4：个人题解、团队代码、完整视频及 rosbag 已整理。
+- 个人交付另行整理至 [yawangjiang/Robot-Group-Individual](https://github.com/yawangjiang/Robot-Group-Individual)，按 `lab3/`、`lab4/` 分目录，供个人仓库提交使用。
 - 两份视频链接文件已提供 GitHub 公开下载地址。课程原文指定 Google Drive/Dropbox，若严格按课程提交，仍需替换为认可的云盘链接；本仓库不代表课程系统已接收作业。
 
 ## 来源

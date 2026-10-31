@@ -1,6 +1,6 @@
 # MIT VNAV LAB3 小组控制器与飞行验收
 
-本文件对应小组 Deliverable 3。个人 Deliverable 1、2 的理论题不包含在此代码交付中。
+本文件主要说明小组 Deliverable 3。个人部分已另行补齐：[Deliverable 1 TXT](deliverable_1.txt)、[Deliverable 2 PDF](deliverable_2.pdf)，以及 [可编辑源码](theory/source/)。个人交付仓库：[yawangjiang/Robot-Group-Individual](https://github.com/yawangjiang/Robot-Group-Individual)。
 
 ## 已配置的虚拟机
 
@@ -68,7 +68,7 @@ rviz -d ~/lab3_ws/src/controller_pkg/rviz/tracking.rviz
 
 原测试脚本使用 `/home/han/lab3_ws` 和 `/home/han/lab3_results` 等当前虚拟机路径；在其他环境运行前需修改。下文指标来自原始测试，LAB4 开启 VMware 3D 加速后没有重新测试 LAB3。
 
-课程原文指定 Google Drive/Dropbox 公开视频链接。链接文件现提供 GitHub 公开下载地址；严格按课程提交时，仍需改为课程认可的云盘链接。个人 Deliverable 1、2 尚未整理，不能将本目录视为完整个人作业。
+课程原文指定 Google Drive/Dropbox 公开视频链接。链接文件现提供 GitHub 公开下载地址；严格按课程提交时，仍需改为课程认可的云盘链接。个人题文件虽然在此提供副本，各成员仍应按课程要求分别提交到自己的个人仓库。
 
 实验要求：https://vnav.mit.edu/labs_2023/lab3/exercises.html
 
