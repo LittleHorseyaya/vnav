@@ -1,0 +1,23 @@
+<launch>
+  <!-- (OPTIONAL) Put in the path to the dataset as a default value for the argument -->
+  <arg name="path_to_dataset" />
+  <arg name="descriptor" default="SIFT" />
+  <arg name="visualize" default="false" />
+  <arg name="playback_rate" default="1.0" />
+  <arg name="save_outputs" default="false" />
+  <arg name="output_dir" default="$(find lab_5)/results" />
+
+  <node name="lab_5" pkg="lab_5" type="track_features" output="screen">
+    <param name="img1_path" type="string" value="$(find lab_5)/images/box.png"/>
+    <param name="img2_path" type="string" value="$(find lab_5)/images/box_in_scene.png"/>
+    <param name="mode" type="int" value="1"/>
+    <param name="descriptor" type="string" value="$(arg descriptor)"/>
+    <param name="save_outputs" type="bool" value="$(arg save_outputs)"/>
+    <param name="output_dir" type="string" value="$(arg output_dir)"/>
+    <param name="visualize" type="bool" value="$(arg visualize)"/>
+
+    <remap from="/images_topic" to="/camera/color/image_raw"/>
+  </node>
+  <node name="rosbag" pkg="rosbag" type="play" output="screen"
+  args="--clock --delay=2 --rate=$(arg playback_rate) $(arg path_to_dataset) /tesse/left_cam/rgb/image_raw:=/camera/color/image_raw" />
+</launch>
