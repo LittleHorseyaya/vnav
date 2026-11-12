@@ -125,7 +125,6 @@ int main(int argc,
   } else if (descriptor == "FAST") {
     ///////////////////// FAST ///////////////////////////////////////////////////
     feature_tracker.reset(new FastFeatureTracker());
-    // (TODO) Implement the functions in FastFeatureTracker
   } else if (descriptor == "LK") {
     ///////////////////// Lucas-Kanade ///////////////////////////////////////////////////
     lk_tracker.reset(new LKFeatureTracker());

@@ -2,7 +2,8 @@
   "pair": [
     {"method": "SIFT", "descriptor": "128 floats", "keypoints1": 603, "keypoints2": 969, "matches": 603, "good": 99, "inliers": 79, "ratio": 79.798},
     {"method": "SURF", "descriptor": "64 floats", "keypoints1": 997, "keypoints2": 1822, "matches": 997, "good": 129, "inliers": 85, "ratio": 65.891},
-    {"method": "ORB", "descriptor": "32 bytes", "keypoints1": 500, "keypoints2": 500, "matches": 500, "good": 13, "inliers": 7, "ratio": 53.846}
+    {"method": "ORB", "descriptor": "32 bytes", "keypoints1": 500, "keypoints2": 500, "matches": 500, "good": 13, "inliers": 7, "ratio": 53.846},
+    {"method": "FAST+BRIEF", "descriptor": "32 bytes", "keypoints1": 382, "keypoints2": 462, "matches": 382, "good": 8, "inliers": 7, "ratio": 87.5}
   ],
   "datasets": [
     {
@@ -14,6 +15,7 @@
         {"method": "SIFT", "keypoints1": 403.547, "keypoints2": 403.606, "matches": 403.547, "good": 258.428, "inliers": 248.952, "ratio": 95.6987, "pairs": 1583},
         {"method": "SURF", "keypoints1": 466.916, "keypoints2": 466.964, "matches": 466.916, "good": 334.204, "inliers": 319.892, "ratio": 95.3055, "pairs": 1583},
         {"method": "ORB", "keypoints1": 315.681, "keypoints2": 315.730, "matches": 315.681, "good": 230.166, "inliers": 225.968, "ratio": 97.8680, "pairs": 1583},
+        {"method": "FAST+BRIEF", "keypoints1": 274.162, "keypoints2": 274.208, "matches": 274.162, "good": 227.902, "inliers": 221.010, "ratio": 96.713, "pairs": 1583},
         {"method": "Harris+LK", "keypoints1": 102.201, "keypoints2": 102.209, "matches": 100.877, "good": 100.877, "inliers": 100.793, "ratio": 99.9193, "pairs": 1583}
       ]
     },
@@ -22,13 +24,26 @@
       "image_topic": "/tesse/left_cam/rgb/image_raw",
       "image_frames": 1386,
       "playback_rate": 0.35,
-      "playback_note": "0.35x SIFT/SURF; 0.6x ORB/LK",
+      "playback_note": "0.35x SIFT/SURF; 0.6x ORB/FAST/LK",
       "rows": [
         {"method": "SIFT", "keypoints1": 147.757, "keypoints2": 147.913, "matches": 147.757, "good": 92.9495, "inliers": 80.6614, "ratio": 86.1424, "pairs": 1385},
         {"method": "SURF", "keypoints1": 1191.760, "keypoints2": 1192.910, "matches": 1191.760, "good": 714.063, "inliers": 609.622, "ratio": 85.4769, "pairs": 1385},
         {"method": "ORB", "keypoints1": 278.775, "keypoints2": 279.090, "matches": 278.775, "good": 166.765, "inliers": 151.237, "ratio": 90.7919, "pairs": 1385},
+        {"method": "FAST+BRIEF", "keypoints1": 268.298, "keypoints2": 268.571, "matches": 268.298, "good": 188.718, "inliers": 174.658, "ratio": 92.2513, "pairs": 1385},
         {"method": "Harris+LK", "keypoints1": 70.618, "keypoints2": 70.6766, "matches": 68.9069, "good": 68.9069, "inliers": 64.2064, "ratio": 93.9210, "pairs": 1385}
       ]
     }
-  ]
+  ],
+  "dense_flow": {
+    "method": "Farneback",
+    "dataset": "30fps_424x240_2018-10-01-18-35-06.bag",
+    "image_frames": 1584,
+    "pairs": 1583,
+    "playback_rate": 0.6,
+    "selected_pair": 300,
+    "selected_mean_motion": 1.9295,
+    "selected_max_motion": 7.73103,
+    "average_mean_motion": 2.47927,
+    "display_max_motion": 3.0
+  }
 }

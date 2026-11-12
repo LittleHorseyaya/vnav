@@ -4,10 +4,10 @@ The SIFT path now detects and describes keypoints, uses FLANN to find two
 neighbors per descriptor, applies the lab's 0.8 distance-ratio filter, and
 uses the provided fundamental-matrix RANSAC helper to classify inliers.
 It handles empty descriptors and frames with too few matches. SURF reuses the
-same FLANN ratio filter with floating-point descriptors. ORB uses Hamming
-distance for binary descriptors. Harris corners with pyramidal LK optical
-flow provide frame-to-frame tracks. FAST+BRIEF and dense optical flow remain
-optional lab TODOs.
+same FLANN ratio filter with floating-point descriptors. ORB and FAST+BRIEF
+use Hamming distance for binary descriptors. Harris corners with pyramidal LK
+optical flow provide frame-to-frame tracks. The optional dense-flow path uses
+Farneback's method and saves a color wheel image and sampled flow arrows.
 
 Prefer **Ubuntu 20.04 with ROS 1 Noetic** for this release. The package uses
 ROS 1 APIs (`roslaunch`, `rosbag`, and catkin), so a ROS 2-only Ubuntu 22.04
@@ -86,8 +86,9 @@ counts can vary slightly with dependencies:
 | SIFT | 603 | 969 | 603 | 99 | 79 | 79.8% |
 | SURF | 997 | 1822 | 997 | 129 | 85 | 65.9% |
 | ORB | 500 | 500 | 500 | 13 | 7 | 53.8% |
+| FAST+BRIEF | 382 | 462 | 382 | 8 | 7 | 87.5% |
 
-Choose `descriptor:=SURF` or `descriptor:=ORB` in the two-image command to
+Choose `descriptor:=SURF`, `descriptor:=ORB`, or `descriptor:=FAST` in the two-image command to
 reproduce those rows. Set a separate `output_dir` per method if you want to
 keep all result PNGs; otherwise the launch overwrites the previous PNGs.
 
@@ -133,6 +134,33 @@ valid tracks are also printed as good matches. The synthetic bag checks the
 subscriber and statistics path; use a real flight rosbag to evaluate tracking
 performance. The rosbag player waits two seconds after advertising the image
 topic so the subscriber receives the first frame.
+
+**Dense optical flow (optional Deliverable 8)** runs Farneback on consecutive
+rosbag frames and saves one chosen pair as a color image and a sampled-arrow
+overlay. The output directory must already exist when using `roslaunch`:
+
+```bash
+mkdir -p /absolute/path/to/flow-results
+roslaunch lab_5 dense_flow.launch \
+  path_to_dataset:=/absolute/path/to/30fps_424x240_2018-10-01-18-35-06.bag \
+  image_topic:=/camera/color/image_raw playback_rate:=0.6 save_pair:=300 \
+  output_dir:=/absolute/path/to/flow-results
+```
+
+Alternatively, the script starts and stops ROS automatically, saves logs,
+and prints the number of processed pairs and mean motion:
+
+```bash
+bash $(rospack find lab_5)/run_dense_flow.sh \
+  /absolute/path/to/30fps_424x240_2018-10-01-18-35-06.bag 0.6 \
+  /absolute/path/to/flow-results 300 /camera/color/image_raw
+```
+
+The `save_pair` value counts processed consecutive pairs starting at one.
+For HSV output, hue encodes displacement direction and brightness represents
+motion magnitude, saturating at the `display_max_motion` ROS parameter
+(3 pixels by default). Arrow lengths are multiplied by four for visibility.
+The image is qualitative; `flow.log` records numerical mean motion.
 
 Measured results and the interpretation of the bundled pair and real bag
 experiments are recorded in `EXPERIMENTS.md`. The individual projection and

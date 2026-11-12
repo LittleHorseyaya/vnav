@@ -6,6 +6,9 @@ with a 3-pixel threshold and 0.99 confidence. SIFT and SURF use FLANN and a
 0.8 two-neighbor distance ratio. ORB uses Hamming-distance brute force with
 the same ratio. Harris+LK uses valid optical-flow tracks instead of descriptor
 matching; its "good matches" count is therefore the valid track count.
+FAST detects up to 500 strongest corners with a threshold of 20, BRIEF
+computes 32-byte binary descriptors, and Hamming brute force applies the
+same 0.8 ratio test as ORB.
 The video inlier ratio is averaged over frame pairs, not recomputed from
 the averages of the inlier and good-match counts.
 
@@ -18,6 +21,7 @@ Inputs: `images/box.png` and `images/box_in_scene.png`.
 | SIFT | 128 floats | 603 | 969 | 603 | 99 | 79 | 79.8% |
 | SURF | 64 floats | 997 | 1822 | 997 | 129 | 85 | 65.9% |
 | ORB | 32 bytes | 500 | 500 | 500 | 13 | 7 | 53.8% |
+| FAST+BRIEF | 32 bytes | 382 | 462 | 382 | 8 | 7 | 87.5% |
 
 The raw-match count is the number of first nearest neighbors. Good matches
 pass the 0.8 ratio filter. The inlier ratio is RANSAC inliers divided by good
@@ -27,6 +31,9 @@ On this sample pair, SURF found the most inliers; SIFT had the higher inlier
 fraction. ORB found far fewer unambiguous matches at the current 500-feature,
 single-pyramid-level setting. Those observations alone do not establish their
 performance on flight video.
+FAST+BRIEF found only 8 ratio-filtered correspondences on this wide-baseline
+pair. Its 87.5% inlier fraction is based on just 8 matches and does not imply
+stronger overall matching than SIFT or SURF.
 
 ## Real rosbag: 30fps_424x240_2018-10-01-18-35-06.bag
 
@@ -39,9 +46,10 @@ only 1393 pairs with SIFT. Playback at 0.6 speed processed all 1583 pairs.
 | SIFT | 403.547 | 403.606 | 403.547 | 258.428 | 248.952 | 95.699% | 1583 |
 | SURF | 466.916 | 466.964 | 466.916 | 334.204 | 319.892 | 95.306% | 1583 |
 | ORB | 315.681 | 315.730 | 315.681 | 230.166 | 225.968 | 97.868% | 1583 |
+| FAST+BRIEF | 274.162 | 274.208 | 274.162 | 227.902 | 221.010 | 96.713% | 1583 |
 | Harris+LK | 102.201 | 102.209 | 100.877 | 100.877 | 100.793 | 99.919% | 1583 |
 
-All four methods processed the same 1583 adjacent pairs at 0.6 playback
+All five methods processed the same 1583 adjacent pairs at 0.6 playback
 speed. SURF produced the most inliers on this relatively smooth sequence.
 Harris+LK had the highest inlier fraction, but it started with fewer corners;
 its match count is the number of tracks retained by optical flow, not a
@@ -62,6 +70,7 @@ Only complete runs are included in the table.
 | SIFT | 147.757 | 147.913 | 147.757 | 92.950 | 80.661 | 86.142% | 1385 |
 | SURF | 1191.760 | 1192.910 | 1191.760 | 714.063 | 609.622 | 85.477% | 1385 |
 | ORB | 278.775 | 279.090 | 278.775 | 166.765 | 151.237 | 90.792% | 1385 |
+| FAST+BRIEF | 268.298 | 268.571 | 268.298 | 188.718 | 174.658 | 92.251% | 1385 |
 | Harris+LK | 70.618 | 70.677 | 68.907 | 68.907 | 64.206 | 93.921% | 1385 |
 
 SURF produced the most average inliers on both real sequences (319.892 and
@@ -70,8 +79,30 @@ exceeded SIFT's average inlier count on this smooth-trajectory sequence
 (151.237 versus 80.661). Harris+LK had the highest average inlier fraction
 on both sequences but tracked fewer corners. These tables do not measure
 execution time, so they do not support a claim that one method is faster.
+FAST+BRIEF was close to ORB on the first sequence (221 versus 226 average
+inliers) and exceeded ORB on the smooth trajectory (175 versus 151), while
+remaining below SURF on both. This reflects the selected 500-corner budget
+and detector threshold, not a universal ranking.
 LK assumes approximately constant local brightness and small motion between
 frames; large motion, occlusion, or appearance changes can break its tracks.
+
+## Optional Deliverable 8: dense Farneback optical flow
+
+The `self_flow` ROS node ran on all 1583 adjacent color-frame pairs of the
+30fps room sequence at 0.6 playback speed. Farneback parameters were pyramid
+scale 0.5, 3 levels, 15-pixel window, 3 iterations, 5-pixel neighborhood,
+and Gaussian sigma 1.2. The mean of each pair's per-pixel flow magnitude
+averaged 2.47927 pixels/frame over the sequence. The selected pair 300 had
+mean magnitude 1.9295 pixels and maximum 7.73103 pixels.
+
+`results/dense_flow/dense_flow_hsv.png` colors the dense field: hue represents
+direction, and brightness increases with magnitude up to 3 pixels/frame.
+`results/dense_flow/dense_flow_arrows.png` overlays every twentieth flow
+vector on the later RGB frame, with arrow lengths scaled by four for display.
+The images show motion across textured surfaces, not just at detected
+corners. Direction varies across the image, while bright/low-texture and
+occluded areas can be less reliable. These figures are qualitative; the
+recorded mean magnitude is the numerical check.
 
 ## Functional video check
 

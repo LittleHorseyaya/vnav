@@ -6,7 +6,7 @@ ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 | --- | --- | --- | --- |
 | LAB3 | 四旋翼几何控制、悬停与圆轨迹跟踪 | 悬停 RMS 0.260 m；圆轨迹 RMS 0.441 m | [源码与运行说明](lab3/README.md) |
 | LAB4 | 单段/多段优化题解、minimum-snap 位置与连续 yaw 轨迹、12 门竞速 | 12 门按序到达；规划 84.468 s；跟踪 RMSE 0.0723 m | [源码、题解与运行说明](lab4/README.md) |
-| LAB5 | SIFT/SURF/ORB 特征匹配与 Harris+LK 跟踪 | 两份指定 rosbag 分别完成 1583、1385 对相邻图像评测 | [源码、报告与运行说明](lab5/README.md) |
+| LAB5 | SIFT/SURF/ORB/FAST+BRIEF 特征匹配、Harris+LK 跟踪与 Farneback 稠密光流 | 两份指定 rosbag 分别完成 1583、1385 对相邻图像评测 | [源码、报告与运行说明](lab5/README.md) |
 
 指标来自保存的实际 ROS 数据；两次实验的统计窗口与口径不同，详情见各实验说明。LAB3 原始测试存在高度波动；LAB4 起飞阶段有地板接触记录，飞行期间没有撞门记录。
 
@@ -22,7 +22,7 @@ ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 
 - LAB3：小组代码和飞行验证已整理；已补齐 [个人题1 TXT](lab3/deliverable_1.txt) 和 [个人题2 PDF](lab3/deliverable_2.pdf)。
 - LAB4：个人题解、团队代码、完整视频及 rosbag 已整理。
-- LAB5：必做题 D1–D7 的代码、两份 PDF、结果图和实验统计已整理；FAST+BRIEF、稠密光流为未完成的可选加分项。原始大体积 rosbag 不在仓库中。
+- LAB5：必做题 D1–D7 及 FAST+BRIEF、稠密光流两项可选加分内容的代码、两份 PDF、结果图和实验统计已整理。原始大体积 rosbag 不在仓库中。
 - LAB3、LAB4 个人交付另行整理至 [yawangjiang/Robot-Group-Individual](https://github.com/yawangjiang/Robot-Group-Individual)，按 `lab3/`、`lab4/` 分目录。LAB5 个人 PDF 副本放在本仓库 `lab5/`，仍需按课程要求提交到个人仓库。
 - 两份视频链接文件已提供 GitHub 公开下载地址。课程原文指定 Google Drive/Dropbox，若严格按课程提交，仍需替换为认可的云盘链接；本仓库不代表课程系统已接收作业。
 

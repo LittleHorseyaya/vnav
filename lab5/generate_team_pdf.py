@@ -171,15 +171,16 @@ story = [
     Paragraph("Methods and scoring", heading),
     Paragraph(
         "SIFT and SURF use FLANN two-neighbor matching and the 0.8 distance "
-        "ratio. ORB uses Hamming-distance brute force with the same ratio. "
-        "Harris+LK tracks corners by pyramidal optical flow. All methods use "
+        "ratio. ORB and FAST+BRIEF use Hamming-distance brute force with "
+        "the same ratio. Harris+LK tracks corners by pyramidal optical flow. "
+        "All five methods use "
         "fundamental-matrix RANSAC with a 3-pixel threshold and 0.99 confidence "
         "to count geometric inliers.", small,
     ),
     Paragraph("Bundled image pair", heading),
     Paragraph(
         "box.png to box_in_scene.png. SIFT descriptors have 128 float values; "
-        "SURF has 64 float values; ORB has 32 bytes.", caption,
+        "SURF has 64 float values; ORB and BRIEF have 32 bytes.", caption,
     ),
     styled_table(pair_headers, pair_rows, pair_widths),
     Spacer(1, 13),
@@ -193,8 +194,10 @@ pair_interpretation = Paragraph(
     "pair harder than adjacent video frames. SURF gave the most RANSAC "
     "inliers (85), while SIFT had the higher inlier fraction (79.8%). "
     "At the supplied 500-feature, one-level setting, ORB retained only "
-    "13 unambiguous matches and 7 inliers. Green lines in the figure are "
-    "inliers; red lines are rejected matches.",
+    "13 unambiguous matches and 7 inliers. FAST+BRIEF had 8 ratio-filtered "
+    "matches and 7 inliers, so its high inlier fraction has a small "
+    "denominator. Green lines in the figure are inliers; red lines are "
+    "rejected matches.",
     body,
 )
 illustration = Table(
@@ -261,20 +264,11 @@ story += [
     Spacer(1, 12),
     Paragraph("Interpretation and limits", heading),
     Paragraph(
-        "SURF produced the most average inliers on both real sequences "
-        "(320 and 610). ORB was weak on the separated box pair, yet exceeded "
-        "SIFT on the smooth trajectory (151 versus 81 inliers), showing the "
-        "effect of scene and motion. Harris+LK had the highest inlier fraction "
-        "but fewer tracks. It assumes small local displacement and roughly "
-        "constant brightness; occlusion and appearance changes can break "
-        "tracks. Valid tracks count as good matches, with no descriptor ratio "
-        "test. Runtime was not measured, so no speed ranking is claimed.",
-        small,
-    ),
-    Paragraph(
-        "For the LK visual, see the next page. The ROS Noetic cv_bridge "
-        "links system OpenCV 4.2 while the historical lab builds OpenCV 3.4.2; "
-        "both modes ran on this VM despite linker warnings.",
+        "SURF led average inliers on both sequences (320 and 610). "
+        "FAST+BRIEF reached 221 and 175, close to ORB's 226 and 151. "
+        "Harris+LK had the highest inlier fraction but fewer tracks; "
+        "it assumes small motion and roughly constant brightness. "
+        "Runtime was not measured, so no speed ranking is claimed.",
         small,
     ),
     PageBreak(),
@@ -296,8 +290,50 @@ story += [
     Paragraph(
         "Assignment and data: MIT 16.485 VNAV LAB5 Exercises (2023), "
         "vnav.mit.edu/labs_2023/lab5/exercises.html; "
-        "github.com/MIT-SPARK/VNAV-lab-data.",
-        caption,
+        "github.com/MIT-SPARK/VNAV-lab-data.", caption,
+    ),
+]
+
+flow = METRICS["dense_flow"]
+flow_figures = Table([[
+    [Paragraph("Direction and magnitude (HSV)", caption),
+     scaled_image(PACKAGE / "results" / "dense_flow" /
+                  "dense_flow_hsv.png", 345)],
+    [Paragraph("Sampled flow arrows on the RGB frame", caption),
+     scaled_image(PACKAGE / "results" / "dense_flow" /
+                  "dense_flow_arrows.png", 345)],
+]], colWidths=[CONTENT_WIDTH / 2] * 2)
+flow_figures.setStyle(TableStyle([
+    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+    ("LEFTPADDING", (0, 0), (-1, -1), 0),
+    ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+    ("TOPPADDING", (0, 0), (-1, -1), 0),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+]))
+story += [
+    PageBreak(),
+    Paragraph("Optional Deliverable 8: dense optical flow", title),
+    Paragraph(
+        "Farneback flow on consecutive RGB frames from Dataset 1. "
+        f'{flow["pairs"]} adjacent pairs were processed; the selected '
+        f'pair is #{flow["selected_pair"]}.', subtitle,
+    ),
+    flow_figures,
+    Spacer(1, 16),
+    Paragraph("Interpretation", heading),
+    Paragraph(
+        "Each pixel receives a 2D displacement estimate. Hue shows motion "
+        "direction; brightness increases with magnitude and saturates at "
+        f'{flow["display_max_motion"]:.1f} pixels/frame. The arrows sample '
+        "the same field every 20 pixels and are drawn four times longer "
+        "for legibility. The selected pair has mean motion "
+        f'{flow["selected_mean_motion"]:.2f} pixels and maximum '
+        f'{flow["selected_max_motion"]:.2f} pixels. Across the processed '
+        f'sequence, the average per-pair mean motion is '
+        f'{flow["average_mean_motion"]:.2f} pixels/frame. Flow is visible '
+        "across surfaces, whereas Harris+LK samples only corner tracks. "
+        "Bright or low-texture regions and occlusions can make local flow "
+        "less reliable.", body,
     ),
 ]
 

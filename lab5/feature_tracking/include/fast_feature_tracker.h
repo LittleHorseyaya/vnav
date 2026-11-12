@@ -66,6 +66,7 @@ protected:
 private:
   // Detector
   cv::Ptr<cv::FeatureDetector> detector;
+  cv::Ptr<cv::Feature2D> descriptor;
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

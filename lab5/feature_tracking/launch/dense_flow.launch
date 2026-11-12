@@ -1,0 +1,16 @@
+<launch>
+  <arg name="path_to_dataset" />
+  <arg name="image_topic" default="/camera/color/image_raw" />
+  <arg name="playback_rate" default="0.6" />
+  <arg name="output_dir" default="$(find lab_5)/results/dense_flow" />
+  <arg name="save_pair" default="300" />
+  <arg name="visualize" default="false" />
+  <node name="dense_flow" pkg="lab_5" type="self_flow" output="screen">
+    <param name="output_dir" type="string" value="$(arg output_dir)" />
+    <param name="save_pair" type="int" value="$(arg save_pair)" />
+    <param name="visualize" type="bool" value="$(arg visualize)" />
+    <remap from="/images_topic" to="/camera/color/image_raw" />
+  </node>
+  <node name="rosbag" pkg="rosbag" type="play" output="screen"
+        args="--clock --delay=2 --rate=$(arg playback_rate) $(arg path_to_dataset) $(arg image_topic):=/camera/color/image_raw --topics $(arg image_topic)" />
+</launch>

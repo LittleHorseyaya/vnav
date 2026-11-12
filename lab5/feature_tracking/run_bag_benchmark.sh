@@ -2,7 +2,7 @@
 # Run one tracker over a full ROS 1 bag and stop it after playback to print stats.
 
 if [ "$#" -lt 3 ] || [ "$#" -gt 5 ]; then
-  echo "Usage: $0 <SIFT|SURF|ORB|LK> <bag-path> <playback-rate> [log-dir] [image-topic]" >&2
+  echo "Usage: $0 <SIFT|SURF|ORB|FAST|LK> <bag-path> <playback-rate> [log-dir] [image-topic]" >&2
   exit 2
 fi
 

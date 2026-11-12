@@ -27,40 +27,64 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
 #include "fast_feature_tracker.h"
+#include <algorithm>
+#include <glog/logging.h>
 #include <opencv2/features2d.hpp>
 
 using namespace cv;
 using namespace cv::xfeatures2d;
 
 FastFeatureTracker::FastFeatureTracker()
-    : detector(FastFeatureDetector::create()) {}
+    : detector(FastFeatureDetector::create(20, true)),
+      descriptor(BriefDescriptorExtractor::create(32)) {}
 
 void FastFeatureTracker::detectKeypoints(const cv::Mat &img,
                                          std::vector<cv::KeyPoint> *keypoints) const {
-// ~~~~ begin solution
-//
-//     **** FILL IN HERE ***
-//
-// ~~~~ end solution
+  CHECK_NOTNULL(keypoints);
+  detector->detect(img, *keypoints);
+  // Keep the strongest 500 FAST corners, matching ORB's feature budget.
+  if (keypoints->size() > 500) {
+    std::partial_sort(keypoints->begin(), keypoints->begin() + 500,
+                      keypoints->end(),
+                      [](const cv::KeyPoint& a, const cv::KeyPoint& b) {
+                        return a.response > b.response;
+                      });
+    keypoints->resize(500);
+  }
 }
 
 void FastFeatureTracker::describeKeypoints(const cv::Mat &img,
                                            std::vector<cv::KeyPoint> *keypoints,
                                            cv::Mat *descriptors) const {
-// ~~~~ begin solution
-//
-//     **** FILL IN HERE ***
-//
-// ~~~~ end solution
+  CHECK_NOTNULL(keypoints);
+  CHECK_NOTNULL(descriptors);
+  if (keypoints->empty()) {
+    descriptors->release();
+    return;
+  }
+  // BRIEF drops corners too close to the image edge.
+  descriptor->compute(img, *keypoints, *descriptors);
 }
 
 void FastFeatureTracker::matchDescriptors(const cv::Mat &descriptors_1,
                                           const cv::Mat &descriptors_2,
                                           std::vector<std::vector<cv::DMatch>> *matches,
                                           std::vector<cv::DMatch> *good_matches) const {
-// ~~~~ begin solution
-//
-//     **** FILL IN HERE ***
-//
-// ~~~~ end solution
+  CHECK_NOTNULL(matches);
+  CHECK_NOTNULL(good_matches);
+  matches->clear();
+  good_matches->clear();
+  if (descriptors_1.empty() || descriptors_2.rows < 2) {
+    return;
+  }
+
+  // BRIEF produces binary descriptors; Hamming distance preserves their metric.
+  BFMatcher matcher(NORM_HAMMING);
+  matcher.knnMatch(descriptors_1, descriptors_2, *matches, 2);
+  for (const auto& neighbors : *matches) {
+    if (neighbors.size() >= 2 &&
+        neighbors[0].distance < 0.8f * neighbors[1].distance) {
+      good_matches->push_back(neighbors[0]);
+    }
+  }
 }
