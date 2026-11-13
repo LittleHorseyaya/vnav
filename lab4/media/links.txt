@@ -1,0 +1,18 @@
+Lab 4 experiment records
+
+Current representative flight (external-timer result: 7.58 s):
+../validation/fast_run/flight.bag
+
+Fastest reported complete lap: 7.44 s.
+The retained flight and source snapshot are from the representative 7.58 s
+trial, not a recording of the fastest trial.
+
+High-speed video: not yet recorded.
+
+Historical slower-flight video:
+early_run.mp4
+
+Historical slower-flight data:
+../validation/early_run/race.bag
+
+The historical video and data must not be described as the current fastest run.

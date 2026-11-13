@@ -7,6 +7,13 @@
 #include <nav_msgs/Odometry.h>
 #include <trajectory_msgs/MultiDOFJointTrajectoryPoint.h>
 #include <cmath>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <eigen3/Eigen/Cholesky>
+#include <algorithm>
+#include <eigen3/Eigen/Geometry>
 
 #define PI M_PI
 
@@ -20,6 +27,26 @@ class controllerNode{
   ros::Subscriber cur_state_sub;
   ros::Publisher rotor_speed_pub;
   ros::Timer control_timer;
+
+
+  // ATTITUDE_FF_EXPERIMENT_V1: default gain zero preserves the original torque.
+  ros::Subscriber attitude_ff_sub_;
+  Eigen::Matrix3d ff_R_ = Eigen::Matrix3d::Identity();
+  Eigen::Vector3d ff_omega_ = Eigen::Vector3d::Zero();
+  Eigen::Vector3d ff_alpha_ = Eigen::Vector3d::Zero();
+  ros::Time ff_received_;
+  bool have_ff_ = false;
+  double ff_phase_ = 0.0, desired_phase_ = 0.0;
+  double ff_gain_ = 0.0, ff_start_ = 3.5, ff_ramp_ = 0.5, ff_max_torque_ = 2.0;
+
+
+  // LEARNING_FF_EXPERIMENT_V1
+  struct LearningRow { double phase; Eigen::Vector3d acceleration; };
+  std::vector<LearningRow> learning_rows_;
+  bool learning_loaded_=false, learning_phase_ready_=false, learning_enabled_=false;
+  double learning_gain_=0.0, learning_limit_=0.6, learning_geometry_=0.0;
+  double learning_rate_=1.0, learning_ramp_=1.0, learning_prefix_=0.0;
+  int learning_gate_count_=0;
 
   double kx, kv, kr, komega;
   double kx_z, kv_z;
@@ -62,6 +89,37 @@ public:
       nh.param("komega", komega, 0.5);
       nh.param("kx_z", kx_z, 4.0);
       nh.param("kv_z", kv_z, 4.0);
+      ros::NodeHandle ff_pnh("~");
+      ff_pnh.param("attitude_ff_gain", ff_gain_, 0.0);
+      ff_pnh.param("attitude_ff_start", ff_start_, 3.5);
+      ff_pnh.param("attitude_ff_ramp", ff_ramp_, 0.5);
+      ff_pnh.param("attitude_ff_max_torque", ff_max_torque_, 2.0);
+      double learning_gain_requested=0.0;
+      std::string learning_file;
+      ff_pnh.param("learning_gain",learning_gain_requested,0.0);
+      ff_pnh.param("learning_max_accel",learning_limit_,0.6);
+      ff_pnh.param("learning_file",learning_file,std::string(""));
+      if (std::isfinite(learning_gain_requested) && learning_gain_requested>=0.0 &&
+          learning_gain_requested<=1.0 && std::isfinite(learning_limit_) &&
+          learning_limit_>0.0 && learning_limit_<=1.5) {
+        learning_gain_=learning_gain_requested;
+        if (learning_gain_>0.0) learning_loaded_=loadLearningTable(learning_file);
+      } else {
+        ROS_ERROR("Invalid learning parameters: disabling learning feedforward");
+      }
+      ff_pnh.setParam("learning_table_loaded",learning_loaded_);
+      ff_pnh.setParam("learning_active",false);
+
+      if (!std::isfinite(ff_gain_) || ff_gain_ < 0 || ff_gain_ > 1 ||
+          !std::isfinite(ff_start_) || ff_start_ < 0 ||
+          !std::isfinite(ff_ramp_) || ff_ramp_ <= 0 ||
+          !std::isfinite(ff_max_torque_) || ff_max_torque_ <= 0) {
+        ROS_ERROR("Invalid attitude FF parameters: disabling feedforward");
+        ff_gain_ = 0.0;
+      }
+      attitude_ff_sub_ = nh.subscribe("/desired_attitude_ff", 1,
+                                     &controllerNode::onAttitudeFeedforward, this);
+
       ROS_INFO("Gain values:\nkx: %f \nkv: %f \nkr: %f \nkomega: %f\n", kx, kv, kr, komega);
 
       m = 1.0;
@@ -69,13 +127,147 @@ public:
       cf = 1e-3;
       g = 9.81;
       d = 0.3;
-      J << 1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0;
+
+      // IDENTIFIED_INERTIA_EXPERIMENT_V1
+      // Effective inertia under the existing rotor-to-wrench allocation.
+      // The fit is not a certified measurement of the simulator's internal tensor.
+      J = Eigen::Matrix3d::Identity();
+      bool use_identified_inertia = false;
+      ff_pnh.param("use_identified_inertia", use_identified_inertia, false);
+      if (use_identified_inertia) {
+        double jxx, jyy, jzz, jxy, jxz, jyz;
+        ff_pnh.param("inertia_xx", jxx, 0.102380);
+        ff_pnh.param("inertia_yy", jyy, 0.189959);
+        ff_pnh.param("inertia_zz", jzz, 0.092444);
+        ff_pnh.param("inertia_xy", jxy, 0.001612);
+        ff_pnh.param("inertia_xz", jxz, -0.003000);
+        ff_pnh.param("inertia_yz", jyz, -0.004245);
+        J << jxx,jxy,jxz, jxy,jyy,jyz, jxz,jyz,jzz;
+        bool valid=J.allFinite();
+        if (valid) {
+          const Eigen::LLT<Eigen::Matrix3d> factor(J);
+          valid=(factor.info()==Eigen::Success);
+        }
+        if (!valid) {
+          ROS_ERROR("Invalid identified inertia; restoring unit inertia");
+          J=Eigen::Matrix3d::Identity();
+          use_identified_inertia=false;
+        }
+      }
+      ff_pnh.setParam("inertia_model_active",use_identified_inertia);
+      ROS_INFO("INERTIA MODEL: identified=%s, diagonal=[%.6f, %.6f, %.6f]",
+               use_identified_inertia ? "true" : "false",J(0,0),J(1,1),J(2,2));
+
 
       double arm = d / sqrt(2.0);
       F2W << cf,          cf,          cf,          cf,
              arm*cf,      arm*cf,     -arm*cf,     -arm*cf,
             -arm*cf,      arm*cf,      arm*cf,     -arm*cf,
              cd,         -cd,          cd,         -cd;
+  }
+
+
+
+  bool loadLearningTable(const std::string& filename) {
+    std::ifstream input(filename.c_str());
+    std::string version,line;
+    if (!(input>>version>>learning_geometry_>>learning_gate_count_) ||
+        version!="LAB4_LEARNING_V1" || !std::isfinite(learning_geometry_) ||
+        learning_geometry_<=0.0 || learning_gate_count_<1) {
+      ROS_ERROR("Cannot read compatible learning table: %s",filename.c_str());
+      return false;
+    }
+    std::getline(input,line);
+    std::vector<LearningRow> rows;
+    while (std::getline(input,line)) {
+      if (line.empty()) continue;
+      std::replace(line.begin(),line.end(),',',' ');
+      std::istringstream parser(line);
+      LearningRow row;
+      if (!(parser>>row.phase>>row.acceleration.x()>>row.acceleration.y()>>row.acceleration.z()) ||
+          !std::isfinite(row.phase) || row.phase<0.0 || !row.acceleration.allFinite() ||
+          row.acceleration.norm()>5.0 || std::abs(row.acceleration.z())>1e-9 ||
+          (!rows.empty() && row.phase<=rows.back().phase)) {
+        ROS_ERROR("Invalid learning table row; learning disabled");
+        return false;
+      }
+      rows.push_back(row);
+    }
+    if (rows.size()<2 || rows.front().phase>1e-6 ||
+        std::abs(rows.back().phase-learning_geometry_)>1e-3) {
+      ROS_ERROR("Learning table does not cover the reference trajectory");
+      return false;
+    }
+    learning_rows_.swap(rows);
+    ROS_INFO("LEARNING TABLE: loaded %zu phase samples",learning_rows_.size());
+    return true;
+  }
+
+  void initializeLearningPhase() {
+    learning_phase_ready_=true;
+    double geometry=0.0;
+    int gates=0;
+    const std::string base="/trajectory_generation_node/";
+    bool valid=nh.getParam(base+"path_speedup",learning_rate_)
+        && nh.getParam(base+"path_ramp",learning_ramp_)
+        && nh.getParam(base+"path_clock_prefix",learning_prefix_)
+        && nh.getParam(base+"geometric_duration",geometry)
+        && nh.getParam(base+"gate_count",gates);
+    valid=valid && std::isfinite(learning_rate_) && learning_rate_>=1.0 && learning_rate_<=1.25
+        && std::isfinite(learning_ramp_) && learning_ramp_>=0.5 && learning_ramp_<=3.0
+        && std::isfinite(learning_prefix_) && learning_prefix_>=0.0
+        && std::isfinite(geometry) && std::abs(geometry-learning_geometry_)<0.01
+        && gates==learning_gate_count_;
+    learning_enabled_=valid;
+    ros::NodeHandle("~").setParam("learning_active",valid);
+    if (valid) ROS_INFO("LEARNING ACTIVE: gain=%.3f, limit=%.3f m/s^2",learning_gain_,learning_limit_);
+    else ROS_ERROR("Learning disabled: phase metadata or reference geometry mismatch");
+  }
+
+  Eigen::Vector3d learningCorrection() const {
+    if (!learning_enabled_ || learning_rows_.size()<2 || desired_phase_<=3.5)
+      return Eigen::Vector3d::Zero();
+    const double e=desired_phase_;
+    double phase=e;
+    const double x=(e-learning_prefix_)/learning_ramp_;
+    if (x>=1.0) phase+=(learning_rate_-1.0)*(e-learning_prefix_-0.5*learning_ramp_);
+    else if (x>0.0) {
+      const double x2=x*x,x3=x2*x,x4=x3*x,x5=x4*x,x6=x5*x,x7=x6*x,x8=x7*x;
+      phase+=(learning_rate_-1.0)*learning_ramp_*(7*x5-14*x6+10*x7-2.5*x8);
+    }
+    if (!std::isfinite(phase) || phase<learning_rows_.front().phase || phase>learning_rows_.back().phase)
+      return Eigen::Vector3d::Zero();
+    auto high=std::lower_bound(learning_rows_.begin(),learning_rows_.end(),phase,
+        [](const LearningRow& row,double value){return row.phase<value;});
+    if (high==learning_rows_.begin()) return Eigen::Vector3d::Zero();
+    if (high==learning_rows_.end()) return Eigen::Vector3d::Zero();
+    const auto low=high-1;
+    const double u=(phase-low->phase)/(high->phase-low->phase);
+    Eigen::Vector3d correction=(1-u)*low->acceleration+u*high->acceleration;
+    const double blend=std::max(0.0,std::min(1.0,(e-3.5)/0.5));
+    correction*=learning_gain_*blend*blend*(3-2*blend);
+    const double magnitude=correction.norm();
+    if (!correction.allFinite() || !std::isfinite(magnitude)) return Eigen::Vector3d::Zero();
+    if (magnitude>learning_limit_) correction*=learning_limit_/magnitude;
+    return correction;
+  }
+
+  void onAttitudeFeedforward(const trajectory_msgs::MultiDOFJointTrajectoryPoint& msg) {
+    have_ff_ = false;
+    if (msg.transforms.size()!=1 || msg.velocities.size()!=1 || msg.accelerations.size()!=1) return;
+    const auto& q = msg.transforms[0].rotation;
+    Eigen::Quaterniond eq(q.w,q.x,q.y,q.z);
+    if (!eq.coeffs().allFinite() || eq.norm()<1e-6) return;
+    eq.normalize();
+    const auto& w=msg.velocities[0].angular;
+    const auto& a=msg.accelerations[0].angular;
+    ff_omega_ << w.x,w.y,w.z;
+    ff_alpha_ << a.x,a.y,a.z;
+    ff_R_ = eq.toRotationMatrix();
+    ff_phase_ = msg.time_from_start.toSec();
+    if (!std::isfinite(ff_phase_) || !ff_omega_.allFinite() || !ff_alpha_.allFinite()) return;
+    ff_received_ = ros::Time::now();
+    have_ff_ = true;
   }
 
   void onDesiredState(const trajectory_msgs::MultiDOFJointTrajectoryPoint& des_state){
@@ -102,6 +294,8 @@ public:
       tf2::fromMsg(des_state.transforms[0].rotation, q_des);
       yawd = tf2::getYaw(q_des);
 
+      desired_phase_ = des_state.time_from_start.toSec();
+      if (learning_loaded_ && !learning_phase_ready_) initializeLearningPhase();
       have_desired_state = true;
   }
 
@@ -146,6 +340,8 @@ public:
     f_des.y() = m * (ad.y() - kx * ex.y() - kv * ev.y());
     f_des.z() = m * (ad.z() + g - kx_z * ex.z() - kv_z * ev.z());
 
+    f_des += m*learningCorrection();
+
     double f_norm = f_des.norm();
     if (f_norm < 1e-6) return;
 
@@ -172,6 +368,28 @@ public:
     eomega = omega;
 
     Eigen::Vector3d tau = -kr * er - komega * eomega;
+    // Add bounded analytic reference-rate/acceleration feedforward, with a
+    // smooth delayed activation. Existing kx/kv/kr/komega and feedback stay intact.
+    if (ff_gain_ > 0.0 && have_ff_ && desired_phase_ > ff_start_) {
+      const double age=(ros::Time::now()-ff_received_).toSec();
+      if (age>=0.0 && age<=0.06 && std::abs(ff_phase_-desired_phase_)<=0.04) {
+        const double u=std::max(0.0,std::min(1.0,(desired_phase_-ff_start_)/ff_ramp_));
+        const double beta=ff_gain_*u*u*(3.0-2.0*u);
+        const double dbeta=ff_gain_*6.0*u*(1.0-u)/ff_ramp_;
+        const Eigen::Matrix3d map=R.transpose()*ff_R_;
+        const Eigen::Vector3d mapped_rate=map*ff_omega_;
+        Eigen::Vector3d extra=komega*beta*mapped_rate
+            + J*(beta*map*ff_alpha_ + dbeta*mapped_rate
+                 - beta*omega.cross(mapped_rate))
+            + beta*omega.cross(J*omega);
+        const double extra_norm=extra.norm();
+        if (extra.allFinite() && std::isfinite(extra_norm)) {
+          if (extra_norm>ff_max_torque_) extra*=ff_max_torque_/extra_norm;
+          tau+=extra;
+        }
+      }
+    }
+
 
     double thrust = f_des.dot(R * e3);
 

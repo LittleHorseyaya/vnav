@@ -1,0 +1,9 @@
+/build/
+/devel/
+/install/
+/logs/
+/.catkin_tools/
+/reproduced/
+/vnav-builds/
+__pycache__/
+*.pyc
