@@ -162,6 +162,27 @@ motion magnitude, saturating at the `display_max_motion` ROS parameter
 (3 pixels by default). Arrow lengths are multiplied by four for visibility.
 The image is qualitative; `flow.log` records numerical mean motion.
 
+**Playable demonstration videos.** The benchmark scripts above run without GUI
+windows and save selected still frames or logs. To export synchronized videos
+from the complete room-sequence bag, run:
+
+```bash
+source /opt/ros/noetic/setup.bash
+/usr/bin/python3 $(rospack find lab_5)/export_demo_videos.py \
+  /absolute/path/to/30fps_424x240_2018-10-01-18-35-06.bag \
+  "$HOME/lab5_demo/videos"
+xdg-open "$HOME/lab5_demo/videos/dense_flow_heatmap.avi"
+xdg-open "$HOME/lab5_demo/videos/harris_lk_tracks.avi"
+```
+
+The two AVI files contain the dense-flow color field and Harris+LK tracks.
+They use Motion JPEG so Ubuntu 20.04's default Videos player can open them
+without extra codec packages. The exporter also writes synchronized MP4 files
+for the original camera view, color field, flow arrows, and LK tracks. All
+videos use the full 1583 adjacent pairs at 30 frames per second (52.77 s).
+They are generated locally from the original bag and are not included in the
+repository.
+
 Measured results and the interpretation of the bundled pair and real bag
 experiments are recorded in `EXPERIMENTS.md`. The individual projection and
 vanishing-point derivations are in `../INDIVIDUAL_SOLUTIONS.md`. Submission

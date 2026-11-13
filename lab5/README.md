@@ -9,11 +9,11 @@
 | [`individual_solutions.pdf`](individual_solutions.pdf)、[`INDIVIDUAL_SOLUTIONS.md`](INDIVIDUAL_SOLUTIONS.md) | D1 球体透视投影；D2 消失点推导。PDF 是排版后的个人答案副本；课程要求个人答案另交个人仓库。 |
 | [`team_report.pdf`](team_report.pdf) | D3–D8 的关键点、匹配、RANSAC、Harris+LK 和稠密光流图；示例图及两组真实数据的统计表、分析。 |
 | [`feature_tracking/src/`](feature_tracking/src/) 与 [`feature_tracking/include/`](feature_tracking/include/) | SIFT、SURF、ORB、FAST+BRIEF、Harris+LK、Farneback 稠密光流算法及 ROS 节点。 |
-| [`feature_tracking/launch/`](feature_tracking/launch/)、[`feature_tracking/run_bag_benchmark.sh`](feature_tracking/run_bag_benchmark.sh)、[`feature_tracking/run_dense_flow.sh`](feature_tracking/run_dense_flow.sh) | 双图与 rosbag 运行方式；脚本在数据包播放完毕后保存日志与平均统计。 |
+| [`feature_tracking/launch/`](feature_tracking/launch/)、[`feature_tracking/run_bag_benchmark.sh`](feature_tracking/run_bag_benchmark.sh)、[`feature_tracking/run_dense_flow.sh`](feature_tracking/run_dense_flow.sh)、[`feature_tracking/export_demo_videos.py`](feature_tracking/export_demo_videos.py) | 双图与 rosbag 运行方式；脚本保存统计，并可从数据包导出光流热力图及 Harris+LK 轨迹视频。 |
 | [`feature_tracking/results/`](feature_tracking/results/)、[`feature_tracking/EXPERIMENTS.md`](feature_tracking/EXPERIMENTS.md) | 原始匹配图和稠密光流图、`metrics.json`、参数、完整帧对计数与结果解释。 |
 | [`dependencies/`](dependencies/) | `catkin_simple`、`gflags_catkin`、`glog_catkin`、`opencv3_catkin` 四个构建依赖。本目录只保留一份各依赖，避免 catkin 包名冲突。 |
 
-`feature_tracking/images/` 是课程提供的 `box.png` 与 `box_in_scene.png`。`generate_individual_pdf.py`、`generate_team_pdf.py` 为报告生成源码；提交用 PDF 已生成。仓库不含体积较大的原始 `.bag` 数据，也不含虚拟机、编译产物或 SSH 凭据。
+`feature_tracking/images/` 是课程提供的 `box.png` 与 `box_in_scene.png`。`generate_individual_pdf.py`、`generate_team_pdf.py` 为报告生成源码；提交用 PDF 已生成。仓库不含体积较大的原始 `.bag` 数据和由其生成的视频，也不含虚拟机、编译产物或 SSH 凭据。
 
 ## 构建与运行
 
