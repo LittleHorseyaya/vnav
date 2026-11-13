@@ -1,68 +1,147 @@
-# MIT VNAV LAB4：轨迹优化与无人机竞速
+# VNAV Lab 4: trajectory optimization and drone racing
 
-已在 E 盘 Ubuntu 虚拟机完成代码、编译、定点测试与完整赛道验证。工作空间：`/home/han/lab4_ws`；仿真器：`/home/han/vnav-builds/lab4/lab4.x86_64`。
+This directory contains the motor-driven racing implementation: continuous
+segment timing, bounded local retiming, a smooth path clock and delayed
+attitude feedforward. The team achieved a fastest complete lap of **7.44 s**,
+with successful fast trials approximately **7.44-7.58 s**. The retained source
+snapshot and launch configuration are associated with the representative
+**7.58 s** recorded run; an exact source revision for the 7.44 s trial was not
+identified. A new run may yield a different time.
 
-## 验证结果
+## Requirements
 
-- 最终采用 race03：12/12 道门按序到达；规划时长 84.468 秒，进入第 12 门中心 0.65 米范围的时刻为 81.200 秒。计时使用仿真时间。
-- 位置跟踪 RMSE 0.0723 米，最大误差 0.1397 米。
-- 起飞阶段有 91 条地板接触消息（同一次接触可产生多条消息），没有撞门记录；原始事件见 validation/race03/race_result.json。
-- 独立离线读取 rosbag：前 11 门真实轨迹按序穿越门平面，终点实测位置误差 0.0562 米；末端参考速度为零。终点为悬停目标，不额外要求飞出最后一道门。
-- 14 个相关 ROS 包编译通过，见 validation/catkin_build.log。Part 0 第一门悬停通过，见 validation/static/result.json。
-- 第一轮 race01 也到达 12 门，规划 112.129 秒、RMSE 0.0647 米；启动阶段曾落地。race02 因 ROS master 重启竞态未完成。交付记录选择已完整验证的较快 race03。
+Ubuntu 20.04 x86-64, ROS Noetic, Python 3.8 and a graphical desktop with working
+3D acceleration. Install ROS Noetic first. Use a separate workspace for this
+experiment. The original Lab 4 simulator must be available at
+`~/vnav-builds/lab4`, containing `lab4.x86_64` and `lab4_Data/`.
+The simulator is distributed separately from the Git source tree. If stored
+elsewhere, set `LAB4_SIM_DIR` to its absolute directory in each terminal.
 
-## 文件
+## Build
 
-- `theory/LAB4_individual.pdf`：Deliverable 1–2，全套推导与结果，3 页。
-- `src/planner_pkg`：Part 0；`src/trajectory_generation_pkg`：Part 1.1–1.3。
-- `src/controller_pkg`：LAB3 控制器；两个 LAB4 launch 使用相同调参值。
-- `src/dependencies`：随课程代码提供的依赖；系统库适配已包含。
-- `src/tesse_ros_bridge`：LAB4 使用的桥接源码，修复重复/回退时间戳导致 UDP 接收线程退出的问题。
-- `media/drone_race.mp4`：完整比赛视频；`validation/race03/race.bag`：原始 ROS 数据。
-- `validation/race03/*validation.json`、`race_result.json`、CSV 与 `images/flight_validation.png`：可复核证据。
-- `scripts`：启动、录制、监测和 rosbag 独立验证脚本；针对当前虚拟机绝对路径配置。
-
-## 在当前虚拟机运行
+Clone the repository, then run from its `lab4` directory:
 
 ```bash
-source ~/lab4_ws/devel/setup.bash
-# 三个终端依次启动；运行前结束上一轮 planner/controller，保持单个仿真器和桥接实例。
-bash ~/lab4_results/start_sim.sh
-bash ~/lab4_results/start_bridge.sh
-bash ~/lab4_results/run_race.sh my_run 3 2 1.3
+sudo apt update
+sudo apt install python3-catkin-tools python3-rosdep python3-tk \
+  python3-numpy python3-scipy python3-pil python3-defusedxml \
+  libgoogle-glog-dev libnlopt-cxx-dev libyaml-cpp-dev libeigen3-dev \
+  ros-noetic-ackermann-msgs ros-noetic-cv-bridge
 ```
 
-普通手动启动方式：先启动仿真器、桥接，再 `roslaunch trajectory_generation traj_following.launch`，最后 `roslaunch planner_pkg traj_gen.launch`。`roslaunch planner_pkg static_point_test.launch` 用于第一门悬停，不能与轨迹跟随同时运行。
-
-查看 rosbag：`rosbag info validation/race03/race.bag`。包含 `/current_state`、`/desired_state`、`/desired_traj_vertices`、`/clock`、`/tesse/collision`、`/tf`。离线检查：`python3 scripts/verify_bag.py validation/race03`（先 source ROS 工作空间）。
-
-## 从源码重编译
-
-在已安装 ROS Noetic、catkin_tools、TESSE Python 接口的 Ubuntu 20.04 环境，将 `src` 放到新工作空间，例如 `~/lab4_repro_ws/src`。系统依赖包括 `libgoogle-glog-dev libnlopt-cxx-dev libyaml-cpp-dev libeigen3-dev` 及各 package.xml 声明的 ROS 包。
+If rosdep has never been initialized, run `sudo rosdep init` once. Then:
 
 ```bash
-source /opt/ros/noetic/setup.bash
-cd ~/lab4_repro_ws
-catkin init
-catkin config --extend /opt/ros/noetic --cmake-args -DCMAKE_BUILD_TYPE=Release -DCATKIN_ENABLE_TESTING=ON
-catkin build planner_pkg trajectory_generation controller_pkg tesse_ros_bridge --no-status -j2 -p2
-source devel/setup.bash
+rosdep update
+cd ~/vnav/lab4
+bash setup.sh
 ```
 
-glog_catkin、yaml_cpp_catkin、nlopt 使用系统库，避免旧版下载地址失效；原始 CMakeLists 保存在各包 CMakeLists.upstream.txt。eigen_checks 的上游构建依赖测试框架，因此保留 CATKIN_ENABLE_TESTING=ON。
+Replace `~/vnav/lab4` with your clone's location. The script builds this
+folder as a catkin workspace, uses its `src/`, and loads the included TESSE
+Python interface from `runtime/`. It does not depend on `/home/han` or another
+user's workspace. Start fresh terminals for the following commands.
 
-控制参数：kx=1，kv=2，kr=4，komega=1，kx_z=4，kv_z=4。轨迹参数：v_max=3，a_max=2，time_scale=1.3；这是段时间估算参数，**不表示严格的速度/加速度上界**。位置、yaw 采用相同段时长，yaw 连续展开，结束后保持终点。VMware 已开启 3D 加速，实际 Unity 约 59 FPS。
+## Run
 
-## 提交前尚需完成
+Each terminal first runs `cd ~/vnav/lab4` (adjust the clone location).
 
-`rviz_drone_race.txt` 已填写本仓库视频和 rosbag 的 GitHub 公开下载地址。课程原文指定 Google Drive/Dropbox；如严格按课程渠道提交，仍需上传到对应云盘并替换链接。仓库整理不等于课程系统已接收作业。个人 PDF 需自行补充姓名、学号并确认理解。
+| Terminal | Command | Purpose |
+| --- | --- | --- |
+| 1 | `bash run.sh simulator` | Start the original simulator. |
+| 2 | `bash run.sh bridge` | Connect ROS to the simulator. |
+| 3 | `bash run.sh timer` | Start the external race timer. |
+| 4 | `bash run.sh follower` | Start trajectory generation and the motor controller. |
+| 5 | `bash run.sh gates` | Publish the ordered gates and trigger planning. |
 
-- [三页个人题解](theory/LAB4_individual.pdf)
-- [完整比赛视频](media/drone_race.mp4)（[直接下载](https://raw.githubusercontent.com/LittleHorseyaya/vnav/main/lab4/media/drone_race.mp4)）
-- [完整 rosbag](validation/race03/race.bag)（[直接下载](https://raw.githubusercontent.com/LittleHorseyaya/vnav/main/lab4/validation/race03/race.bag)）
-- [独立离线核验](validation/race03/offline_validation.json)
+Wait for bridge initialization and press R in the simulator before starting
+Terminal 4. Start Terminal 5 only after Terminal 4 is ready. To repeat, stop
+Terminals 4 and 5 with Ctrl+C, reset with R, then restart 4 followed by 5.
+Use `bash run.sh record` in an optional sixth terminal before gate publication;
+stop it with Ctrl+C after the flight. New bags and parameter dumps go to
+`reproduced/`.
 
-![轨迹与跟踪误差](images/flight_validation.png)
+The follower explicitly selects this configuration:
 
-要求来源：https://vnav.mit.edu/labs_2023/lab4/exercises.html
-代码版本入口：https://github.com/MIT-SPARK/VNAV-labs/releases/tag/VNAV2021
+```bash
+timing_mode:=continuous
+v_max:=21 a_max:=16 lateral_accel:=8
+time_scale:=1.27 first_gate_vz:=3
+segment_time_scales:="[]" corner_gate:=0
+attitude_ff_gain:=0.25 attitude_ff_start:=2.0
+attitude_ff_ramp:=0.5 attitude_ff_max_torque:=2
+retime:=true retime_ratio:=0.93 retime_passes:=12
+finish_extension:=0 use_identified_inertia:=false
+path_speedup:=1.10 path_ramp:=1.0 learning_gain:=0
+```
+
+Controller gains are `kx=1`, `kv=2`, `kr=4`, `komega=1`, `kx_z=4`, `kv_z=4`.
+Running `traj_following.launch` without these trajectory arguments selects its
+legacy defaults, rather than this saved racing configuration. Ground/wall
+contacts occurred in aggressive fast trials; the historical low-error race
+below is a different experiment and must not be combined with these times.
+
+## Files
+
+- `src/controller_pkg/`: geometric controller and attitude feedforward.
+- `src/trajectory_generation_pkg/`: trajectory planning, timing and sampling;
+  includes `src/lab4_attitude_ff.h`.
+- `src/planner_pkg/`: gate publication and course information.
+- `src/tesse_ros_bridge/`: ROS interface to the simulator.
+- `src/dependencies/`: source dependencies with their original notices.
+- `src/race_timer_gui.py`: external timer.
+- `runtime/tesse/`: TESSE Python interface.
+- `setup.sh`, `run.sh`: portable build and process entry points.
+
+## Recorded data and historical material
+
+The current experiment record is stored in `validation/fast_run/`:
+
+| File | Content |
+| --- | --- |
+| `flight.bag` | Representative flight recorded with a 7.58 s external-timer result. |
+| `metrics.json` | Statistics computed from that recording. |
+| `trajectory.pdf` | Reference and measured XY trajectories. |
+| `flight_profile.pdf` | Altitude, speed and reference acceleration. |
+| `position_error.pdf` | Position tracking error. |
+| `motor_commands.pdf` | Signed commands sent to the four rotors. |
+
+The recording was previously named `path110.bag`; it has only been renamed,
+not re-recorded or modified. Existing references to that filename in the
+report and historical logs identify this same recording. The external
+historical download keeps its original filename:
+
+
+[Flight-data download page](https://vnav-lab4-group14-flight-data.civilsycamore8.chatgpt.site)
+
+[Direct path110.bag download](https://vnav-lab4-group14-flight-data.civilsycamore8.chatgpt.site/path110.bag)
+
+The historical slower trial is stored in `validation/early_run/`; the initial
+fixed-point test remains in `validation/static/`. Its video is explicitly named
+`media/early_run.mp4`, and its screenshots are `images/early_run_simulator.png`
+and `images/early_run_tracking.png`. The `scripts/` directory retains the old
+tools. These are historical materials from the slower configuration. Its reported 81.200 s gate-arrival time, 84.468 s planned
+duration and approximately 0.0723 m tracking RMSE do not describe the current fast-run recording.
+The old scripts contain machine-specific paths; use the root `run.sh` above
+for the updated configuration. The stored build log also predates this update.
+
+This source update was compared against the retained reproduction archive.
+The new portable launch wrappers still require a build and flight check on
+Ubuntu/ROS Noetic before claiming a new reproduction result.
+
+## Report and video status
+
+[Experiment report](report.pdf) combines the individual derivations, personal
+contribution and group experiment. It reports the fastest observed lap of
+7.44 s separately from the retained 7.58 s recording/configuration.
+
+**The high-speed flight video has not yet been recorded.**
+`media/early_run.mp4` shows only the older, slower flight. It is not evidence
+of the high-speed run. `media/links.txt` labels the available records.
+
+## References
+
+- [Official Lab 4 exercises](https://vnav.mit.edu/labs_2023/lab4/exercises.html)
+- [Course source release](https://github.com/MIT-SPARK/VNAV-labs/releases/tag/VNAV2021)
+
+Third-party source retains its original copyright and license notices.

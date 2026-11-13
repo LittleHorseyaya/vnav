@@ -1,0 +1,16 @@
+{
+  "reference_duration_s": 9.558204458,
+  "reference_peak_speed_mps": 13.567340517933838,
+  "reference_peak_acceleration_mps2": 25.120139825216867,
+  "state_samples": 478,
+  "evaluation_start_s": 0.0,
+  "evaluation_end_s": 9.539999999999964,
+  "evaluation_duration_s": 9.539999999999964,
+  "position_rms_m": 2.4873008374032435,
+  "position_max_m": 4.901862623803956,
+  "actual_peak_speed_mps": 15.925881137471325,
+  "actual_altitude_min_m": 0.2150113,
+  "actual_altitude_max_m": 4.029346,
+  "reference_polyline_length_m": 93.58752106292474,
+  "reference_start_epoch_s": 2642.119999999
+}

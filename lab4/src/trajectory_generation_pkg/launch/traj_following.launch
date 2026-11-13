@@ -3,14 +3,75 @@
   <arg name="v_max" default="3"/>
   <arg name="a_max" default="2"/>
   <arg name="time_scale" default="1.3"/>
+  <arg name="first_gate_vz" default="-1"/>
+  <arg name="timing_mode" default="legacy"/>
+  <arg name="lateral_accel" default="8"/>
+  <arg name="segment_time_scales" default="[]"/>
+  <arg name="corner_gate" default="0"/>
+  <arg name="corner_speed" default="4"/>
+  <arg name="retime" default="false"/>
+  <arg name="retime_ratio" default="0.95"/>
+  <arg name="retime_passes" default="8"/>
+  <arg name="finish_extension" default="0"/>
+  <arg name="path_speedup" default="1"/>
+  <arg name="path_ramp" default="1"/>
+  <arg name="attitude_preview" default="0"/>
+  <arg name="late_speedup" default="0"/>
+  <arg name="late_after_gate" default="8"/>
+  <arg name="late_until_gate" default="0"/>
+  <arg name="turn_slowdown" default="0"/>
+  <arg name="turn_after_gate" default="4"/>
+  <arg name="turn_until_gate" default="7"/>
+  <arg name="late_return_ramp" default="0.5"/>
+  <arg name="late_final_rate" default="0"/>
+  <arg name="gate_window_retime" default="false"/>
   <node name="trajectory_generation_node" pkg="trajectory_generation" type="trajectory_generation_node" output="screen">
     <param name="v_max" value="$(arg v_max)"/>
     <param name="a_max" value="$(arg a_max)"/>
     <param name="time_scale" value="$(arg time_scale)"/>
+    <param name="path_speedup" value="$(arg path_speedup)"/>
+    <param name="path_ramp" value="$(arg path_ramp)"/>
+    <param name="attitude_preview" value="$(arg attitude_preview)"/>
+    <param name="late_speedup" value="$(arg late_speedup)"/>
+    <param name="late_after_gate" type="int" value="$(arg late_after_gate)"/>
+    <param name="late_until_gate" type="int" value="$(arg late_until_gate)"/>
+    <param name="turn_slowdown" value="$(arg turn_slowdown)"/>
+    <param name="turn_after_gate" type="int" value="$(arg turn_after_gate)"/>
+    <param name="turn_until_gate" type="int" value="$(arg turn_until_gate)"/>
+    <param name="late_return_ramp" value="$(arg late_return_ramp)"/>
+    <param name="late_final_rate" value="$(arg late_final_rate)"/>
+    <param name="gate_window_retime" type="bool" value="$(arg gate_window_retime)"/>
+    <param name="finish_extension" value="$(arg finish_extension)"/>
+    <param name="retime_passes" type="int" value="$(arg retime_passes)"/>
+    <param name="retime" type="bool" value="$(arg retime)"/>
+    <param name="retime_ratio" value="$(arg retime_ratio)"/>
+    <param name="corner_gate" value="$(arg corner_gate)"/>
+    <param name="corner_speed" value="$(arg corner_speed)"/>
+    <rosparam param="segment_time_scales" subst_value="true">$(arg segment_time_scales)</rosparam>
+    <param name="timing_mode" value="$(arg timing_mode)"/>
+    <param name="lateral_accel" value="$(arg lateral_accel)"/>
+    <param name="first_gate_vz" value="$(arg first_gate_vz)"/>
   </node>
 
   <!-- Launch our controller -->
-  <node name="controller_node" pkg="controller_pkg" type="controller_node" />
+  <arg name="attitude_ff_gain" default="0"/>
+  <arg name="learning_gain" default="0"/>
+  <arg name="learning_max_accel" default="0.6"/>
+  <arg name="learning_file" default=""/>
+  <arg name="use_identified_inertia" default="false"/>
+  <arg name="attitude_ff_start" default="3.5"/>
+  <arg name="attitude_ff_ramp" default="0.5"/>
+  <arg name="attitude_ff_max_torque" default="2"/>
+  <node name="controller_node" pkg="controller_pkg" type="controller_node">
+    <param name="attitude_ff_gain" value="$(arg attitude_ff_gain)"/>
+    <param name="learning_gain" value="$(arg learning_gain)"/>
+    <param name="learning_max_accel" value="$(arg learning_max_accel)"/>
+    <param name="learning_file" type="str" value="$(arg learning_file)"/>
+    <param name="use_identified_inertia" type="bool" value="$(arg use_identified_inertia)"/>
+    <param name="attitude_ff_start" value="$(arg attitude_ff_start)"/>
+    <param name="attitude_ff_ramp" value="$(arg attitude_ff_ramp)"/>
+    <param name="attitude_ff_max_torque" value="$(arg attitude_ff_max_torque)"/>
+  </node>
 
   <!-- TODO: Copy your controller gains from lab 3 to here! -->
   <param name="kx" type="double" value="1" />

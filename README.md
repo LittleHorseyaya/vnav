@@ -5,15 +5,15 @@ ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 | 实验 | 内容 | 实测结果 | 入口 |
 | --- | --- | --- | --- |
 | LAB3 | 四旋翼几何控制、悬停与圆轨迹跟踪 | 悬停 RMS 0.260 m；圆轨迹 RMS 0.441 m | [源码与运行说明](lab3/README.md) |
-| LAB4 | 单段/多段优化题解、minimum-snap 位置与连续 yaw 轨迹、12 门竞速 | 12 门按序到达；规划 84.468 s；跟踪 RMSE 0.0723 m | [源码、题解与运行说明](lab4/README.md) |
+| LAB4 | 单段/多段优化题解、minimum-snap 位置与连续 yaw 轨迹、12 门竞速 | 最快完整圈 7.44 s；保留 path110 代表配置（7.58 s） | [源码、题解与运行说明](lab4/README.md) |
 | LAB5 | SIFT/SURF/ORB/FAST+BRIEF 特征匹配、Harris+LK 跟踪与 Farneback 稠密光流 | 两份指定 rosbag 分别完成 1583、1385 对相邻图像评测 | [源码、报告与运行说明](lab5/README.md) |
 
-指标来自保存的实际 ROS 数据；两次实验的统计窗口与口径不同，详情见各实验说明。LAB3 原始测试存在高度波动；LAB4 起飞阶段有地板接触记录，飞行期间没有撞门记录。
+指标来自保存的实际 ROS 数据；两次实验的统计窗口与口径不同，详情见各实验说明。LAB3 原始测试存在高度波动；LAB4 的高速实验存在擦地或碰墙记录；early_run 数据属于较慢配置，不能作为高速版本的误差指标。
 
 ## 内容导航
 
 - LAB3：[控制器](lab3/controller_pkg/src/controller_node.cpp) · [飞行视频](lab3/media/rviz_drone_flight.mp4) · [验证数据](lab3/validation)
-- LAB4：[轨迹生成](lab4/src/trajectory_generation_pkg/src/trajectory_generation_node.cpp) · [个人题解 PDF](lab4/theory/LAB4_individual.pdf) · [比赛视频](lab4/media/drone_race.mp4) · [rosbag](lab4/validation/race03/race.bag) · [离线核验](lab4/validation/race03/offline_validation.json)
+- LAB4：[轨迹生成](lab4/src/trajectory_generation_pkg/src/trajectory_generation_node.cpp) · [个人题解 PDF](lab4/theory/individual.pdf) · [旧版比赛视频](lab4/media/early_run.mp4) · [旧版 rosbag](lab4/validation/early_run/race.bag) · [高速飞行记录](lab4/validation/fast_run/flight.bag) · [实验报告](lab4/report.pdf) · [运行说明](lab4/README.md)
 - LAB5：[特征跟踪源码](lab5/feature_tracking/src) · [团队报告 PDF](lab5/team_report.pdf) · [个人答案 PDF 副本](lab5/individual_solutions.pdf) · [实验统计](lab5/feature_tracking/EXPERIMENTS.md)
 
 各实验源码、依赖、脚本和结果保存在对应目录；LAB3、LAB4 还包含视频或 rosbag，LAB5 的原始大体积 rosbag 需另行下载。不包含 Unity 仿真器、虚拟机镜像或编译产物。各实验分别构建工作空间，避免重复 ROS 包名冲突。部分附带脚本按原实验虚拟机路径配置，移到其他机器需调整路径。

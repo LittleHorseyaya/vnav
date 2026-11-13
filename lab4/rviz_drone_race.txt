@@ -1,7 +1,0 @@
-Video (GitHub public download):
-https://raw.githubusercontent.com/LittleHorseyaya/vnav/main/lab4/media/drone_race.mp4
-
-Complete fastest validated rosbag (GitHub public download):
-https://raw.githubusercontent.com/LittleHorseyaya/vnav/main/lab4/validation/race03/race.bag
-
-The handout requests Google Drive/Dropbox. Replace with accepted public cloud links if required by the course.
