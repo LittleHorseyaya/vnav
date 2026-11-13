@@ -148,8 +148,7 @@ The video records a complete flight through all twelve gates. The on-screen
 timer finishes at **7563.312 ms (7.56 s rounded)**. It uses the original
 motor-driven simulator and the retained racing configuration. The MP4 is a
 lossless remux of the OBS recording: its full approximately 25 s recording,
-frame timing and encoded video/audio streams are preserved, with no speed
-change or trimming.
+encoded video stream is preserved, with no speed change or trimming.
 
 This video's 7.56 s lap, the previously saved 7.58 s rosbag and the team's
 fastest 7.44 s lap are separate trials. The tracking plots and `metrics.json`
