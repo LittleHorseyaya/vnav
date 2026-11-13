@@ -6,7 +6,10 @@ attitude feedforward. The team achieved a fastest complete lap of **7.44 s**,
 with successful fast trials approximately **7.44-7.58 s**. The retained source
 snapshot and launch configuration are associated with the representative
 **7.58 s** recorded run; an exact source revision for the 7.44 s trial was not
-identified. A new run may yield a different time.
+identified. A newly recorded complete flight achieved **7.56 s**, with all twelve
+gates passed. Its on-screen timer displays **7563.312 ms**. The video and the
+retained 7.58 s recording are from separate flights. A new run may yield a
+different time.
 
 ## Requirements
 
@@ -117,11 +120,14 @@ historical download keeps its original filename:
 [Direct path110.bag download](https://vnav-lab4-group14-flight-data.civilsycamore8.chatgpt.site/path110.bag)
 
 The historical slower trial is stored in `validation/early_run/`; the initial
-fixed-point test remains in `validation/static/`. Its video is explicitly named
-`media/early_run.mp4`, and its screenshots are `images/early_run_simulator.png`
-and `images/early_run_tracking.png`. The `scripts/` directory retains the old
-tools. These are historical materials from the slower configuration. Its reported 81.200 s gate-arrival time, 84.468 s planned
-duration and approximately 0.0723 m tracking RMSE do not describe the current fast-run recording.
+fixed-point test remains in `validation/static/`. Its screenshots are
+`images/early_run_simulator.png` and `images/early_run_tracking.png`. The
+`scripts/` directory retains the old tools. These are historical materials
+from the slower configuration. Its reported 81.200 s gate-arrival time,
+84.468 s planned duration and approximately 0.0723 m tracking RMSE do not
+describe either the retained fast-run recording or the new video. The old
+slow-flight video has been replaced in the current tree; earlier versions
+remain available in Git history.
 The old scripts contain machine-specific paths; use the root `run.sh` above
 for the updated configuration. The stored build log also predates this update.
 
@@ -129,15 +135,27 @@ This source update was compared against the retained reproduction archive.
 The new portable launch wrappers still require a build and flight check on
 Ubuntu/ROS Noetic before claiming a new reproduction result.
 
-## Report and video status
+## Report and flight video
 
 [Experiment report](report.pdf) combines the individual derivations, personal
 contribution and group experiment. It reports the fastest observed lap of
 7.44 s separately from the retained 7.58 s recording/configuration.
 
-**The high-speed flight video has not yet been recorded.**
-`media/early_run.mp4` shows only the older, slower flight. It is not evidence
-of the high-speed run. `media/links.txt` labels the available records.
+[Watch the 7.56 s flight](media/fast_run.mp4) ·
+[Download the MP4](https://raw.githubusercontent.com/LittleHorseyaya/vnav/main/lab4/media/fast_run.mp4)
+
+The video records a complete flight through all twelve gates. The on-screen
+timer finishes at **7563.312 ms (7.56 s rounded)**. It uses the original
+motor-driven simulator and the retained racing configuration. The MP4 is a
+lossless remux of the OBS recording: its full approximately 25 s recording,
+frame timing and encoded video/audio streams are preserved, with no speed
+change or trimming.
+
+This video's 7.56 s lap, the previously saved 7.58 s rosbag and the team's
+fastest 7.44 s lap are separate trials. The tracking plots and `metrics.json`
+still describe the original 7.58 s recording; they are not measurements of
+this video's flight. The report remains the existing experiment report and
+predates this new video. `media/links.txt` provides the video and data links.
 
 ## References
 

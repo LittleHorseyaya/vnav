@@ -1,18 +1,21 @@
-Lab 4 experiment records
+Lab 4 flight video and data
 
-Current representative flight (external-timer result: 7.58 s):
-../validation/fast_run/flight.bag
+Current flight video: 7.56 s, all twelve gates passed.
+Displayed final timer: 7563.312 ms.
+Video page:
+https://github.com/LittleHorseyaya/vnav/blob/main/lab4/media/fast_run.mp4
+Direct MP4 download:
+https://raw.githubusercontent.com/LittleHorseyaya/vnav/main/lab4/media/fast_run.mp4
 
-Fastest reported complete lap: 7.44 s.
-The retained flight and source snapshot are from the representative 7.58 s
-trial, not a recording of the fastest trial.
+The full OBS recording was losslessly remuxed from MKV to MP4. No trimming,
+re-encoding or speed change was applied.
 
-High-speed video: not yet recorded.
+Previously retained flight data: representative 7.58 s trial.
+https://github.com/LittleHorseyaya/vnav/blob/main/lab4/validation/fast_run/flight.bag
+This bag and its tracking metrics are from a different flight than the video.
 
-Historical slower-flight video:
-early_run.mp4
+Fastest reported complete lap: 7.44 s, a separate trial.
 
 Historical slower-flight data:
-../validation/early_run/race.bag
-
-The historical video and data must not be described as the current fastest run.
+https://github.com/LittleHorseyaya/vnav/tree/main/lab4/validation/early_run
+The old slow-flight video is retained only in Git history.
