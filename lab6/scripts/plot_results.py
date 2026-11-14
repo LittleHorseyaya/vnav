@@ -98,12 +98,12 @@ fig.text(.08,.015,'All 4 failures are Nister timeouts; 2 s process watchdog. See
 fig.subplots_adjust(bottom=.19)
 save(fig,ROBUST,'failure_counts')
 
-chinese=['五点法','八点法','两点法（真值旋转）','Arun三维配准']
-with (ROOT/'results/tables/summary_zh.csv').open('w',newline='',encoding='utf-8-sig') as f:
+table_labels=['Five-point','Eight-point','Two-point (GT rotation)','Arun 3D alignment']
+with (ROOT/'results/tables/summary.csv').open('w',newline='',encoding='utf-8') as f:
     writer=csv.writer(f)
-    writer.writerow(['方法','重复次数','平移单位','全程均值的跨种子平均','全程均值的跨种子样本标准差','最小全程均值','最大全程均值','失败总数','超时总数','总尝试次数'])
-    for label,r in zip(chinese,summary):
-        writer.writerow([label,r['runs'],'米' if r['method']=='arun' else '无单位方向误差',
+    writer.writerow(['method','runs','translation_unit','average_of_run_means','sample_std_of_run_means','min_run_mean','max_run_mean','failed_solves','timeout_solves','attempts'])
+    for label,r in zip(table_labels,summary):
+        writer.writerow([label,r['runs'],'m' if r['method']=='arun' else 'direction',
                          r['translation_run_mean_average'],r['translation_run_mean_sample_std'],
                          r['translation_run_mean_min'],r['translation_run_mean_max'],
                          r['failed_total'],r['timeout_total'],19445])
