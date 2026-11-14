@@ -1,0 +1,9 @@
+Seeds: 12345, 23456, 34567, 45678, 56789
+Cache: /mnt/lab6_data/results/cache_full01
+All bearing thresholds: 1e-6; Arun threshold: 0.05 m; max RANSAC iterations: 1000.
+5pt and 8pt refined; 2pt fixed-GT-rotation SVD; Arun refitted on inliers.
+All seeds retained. No ranking-based selection. Unchanged cached SIFT matches.
+Each frame restarts its RNG with the run seed.
+New runs use 2 s process watchdog; timeout rows are retained as failures.
+Seed 12345 reuses verified original run; seed 23456 reuses watchdog test.
+Timing is not compared across reused and isolated runs.

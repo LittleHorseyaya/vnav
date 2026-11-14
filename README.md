@@ -1,4 +1,4 @@
-# MIT VNAV：LAB3、LAB4 与 LAB5
+# MIT VNAV：LAB3、LAB4、LAB5 与 LAB6
 
 ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 
@@ -7,6 +7,7 @@ ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 | LAB3 | 四旋翼几何控制、悬停与圆轨迹跟踪 | 悬停 RMS 0.260 m；圆轨迹 RMS 0.441 m | [源码与运行说明](lab3/README.md) |
 | LAB4 | 单段/多段优化题解、minimum-snap 位置与连续 yaw 轨迹、12 门竞速 | 最快完整圈 7.44 s；新增视频 7.56 s；保留代表性录包 7.58 s | [源码、题解与运行说明](lab4/README.md) |
 | LAB5 | SIFT/SURF/ORB/FAST+BRIEF 特征匹配、Harris+LK 跟踪与 Farneback 稠密光流 | 两份指定 rosbag 分别完成 1583、1385 对相邻图像评测 | [源码、报告与运行说明](lab5/README.md) |
+| LAB6 | 两视图位姿：五点/八点/已知旋转两点、Arun 3D配准；统一缓存与五随机种子验证 | 共同3,889组帧对；两点平均方向误差0.06357；Arun平均平移误差4.08 mm | [源码、视频、图表与运行说明](lab6/README.md) |
 
 指标来自保存的实际 ROS 数据；两次实验的统计窗口与口径不同，详情见各实验说明。LAB3 原始测试存在高度波动；LAB4 的高速实验存在擦地或碰墙记录；early_run 数据属于较慢配置，不能作为高速版本的误差指标。
 
@@ -15,14 +16,16 @@ ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 - LAB3：[控制器](lab3/controller_pkg/src/controller_node.cpp) · [飞行视频](lab3/media/rviz_drone_flight.mp4) · [验证数据](lab3/validation)
 - LAB4：[轨迹生成](lab4/src/trajectory_generation_pkg/src/trajectory_generation_node.cpp) · [个人题解 PDF](lab4/theory/individual.pdf) · [高速飞行视频（7.56 s）](lab4/media/fast_run.mp4) · [旧版 rosbag](lab4/validation/early_run/race.bag) · [高速飞行记录](lab4/validation/fast_run/flight.bag) · [实验报告](lab4/report.pdf) · [运行说明](lab4/README.md)
 - LAB5：[特征跟踪源码](lab5/feature_tracking/src) · [团队报告 PDF](lab5/team_report.pdf) · [个人答案 PDF 副本](lab5/individual_solutions.pdf) · [实验统计](lab5/feature_tracking/EXPERIMENTS.md)
+- LAB6：[位姿估计源码](lab6/src/pose_estimation.cpp) · [共同输入求解器](lab6/src/cache_eval.cpp) · [RViz视频](lab6/media/Lab6_Arun_RViz.mp4) · [误差曲线](lab6/figures/error_curves) · [多种子统计](lab6/results/tables/across_seed_summary.csv)（报告暂不上传）
 
-各实验源码、依赖、脚本和结果保存在对应目录；LAB3、LAB4 还包含视频或 rosbag，LAB5 的原始大体积 rosbag 需另行下载。不包含 Unity 仿真器、虚拟机镜像或编译产物。各实验分别构建工作空间，避免重复 ROS 包名冲突。部分附带脚本按原实验虚拟机路径配置，移到其他机器需调整路径。
+各实验源码、依赖、脚本和结果保存在对应目录；LAB3、LAB4 还包含视频或 rosbag，LAB5、LAB6 的原始大体积 rosbag 需另行下载。不包含 Unity 仿真器、虚拟机镜像或编译产物。各实验分别构建工作空间，避免重复 ROS 包名冲突。部分附带脚本按原实验虚拟机路径配置，移到其他机器需调整路径。
 
 ## 提交状态
 
 - LAB3：小组代码和飞行验证已整理；已补齐 [个人题1 TXT](lab3/deliverable_1.txt) 和 [个人题2 PDF](lab3/deliverable_2.pdf)。
 - LAB4：源码、实验报告、7.56 s 全门通过视频及代表性 7.58 s 录包已整理；最快实测成绩仍为 7.44 s。新视频与原录包来自不同次飞行。
 - LAB5：必做题 D1–D7 及 FAST+BRIEF、稠密光流两项可选加分内容的代码、两份 PDF、结果图和实验统计已整理。原始大体积 rosbag 不在仓库中。
+- LAB6：小组D3–D5源码、RViz视频、统一输入曲线、五种子逐帧数据与失败统计已整理；实验报告按后续要求另行编写，当前不上传，个人D1/D2不在本次范围内。
 - LAB3、LAB4 个人交付另行整理至 [yawangjiang/Robot-Group-Individual](https://github.com/yawangjiang/Robot-Group-Individual)，按 `lab3/`、`lab4/` 分目录。LAB5 个人 PDF 副本放在本仓库 `lab5/`，仍需按课程要求提交到个人仓库。
 - 两份视频链接文件已提供 GitHub 公开下载地址。课程原文指定 Google Drive/Dropbox，若严格按课程提交，仍需替换为认可的云盘链接；本仓库不代表课程系统已接收作业。
 
@@ -31,6 +34,7 @@ ROS Noetic / Ubuntu 20.04 下的实验源码、运行说明和实测记录。
 - [LAB3 要求](https://vnav.mit.edu/labs_2023/lab3/exercises.html)
 - [LAB4 要求](https://vnav.mit.edu/labs_2023/lab4/exercises.html)
 - [LAB5 要求](https://vnav.mit.edu/labs_2023/lab5/exercises.html)
+- [LAB6 要求](https://vnav.mit.edu/labs_2023/lab6/exercises.html)
 - [MIT-SPARK/VNAV-labs VNAV2021 代码与仿真器入口](https://github.com/MIT-SPARK/VNAV-labs/releases/tag/VNAV2021)
 
 课程模板和第三方依赖保留原有版权及许可文件；没有为第三方代码重新指定许可证。

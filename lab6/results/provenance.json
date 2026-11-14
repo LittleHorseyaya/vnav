@@ -1,0 +1,57 @@
+{
+  "purpose": "organized experimental assets; no report generated",
+  "seed_directory": "D:\\Lab6_data\\results\\seed_validation_20261114_074955",
+  "seeds": [
+    12345,
+    23456,
+    34567,
+    45678,
+    56789
+  ],
+  "cache_prefix": "D:\\Lab6_data\\results\\cache_full01",
+  "cache_pairs": 3889,
+  "large_matches_cache_copied": false,
+  "source_archive_sha256": "f3a3f6be334d4060c5fe2b765cf95826e429109fb857efbc14fbbf47f612c88e",
+  "curve_representative_seed": 12345,
+  "failures_retained": [
+    {
+      "seed": 23456,
+      "method": "nister",
+      "frame_id": "2359",
+      "image_time_s": "169.104899999",
+      "status": "solver_timeout"
+    },
+    {
+      "seed": 34567,
+      "method": "nister",
+      "frame_id": "3787",
+      "image_time_s": "255.15489999900001",
+      "status": "solver_timeout"
+    },
+    {
+      "seed": 45678,
+      "method": "nister",
+      "frame_id": "2962",
+      "image_time_s": "207.20490000000001",
+      "status": "solver_timeout"
+    },
+    {
+      "seed": 56789,
+      "method": "nister",
+      "frame_id": "3411",
+      "image_time_s": "231.8049",
+      "status": "solver_timeout"
+    }
+  ],
+  "notes": [
+    "seed12345 reused completed non-isolated run; numerical reproducibility validated",
+    "other seeds use 2-second per-frame per-method process watchdog",
+    "all seeds restart the RNG for each frame",
+    "successful-error summaries are conditional on success; report failures separately",
+    "solver time not comparable across process isolation configurations",
+    "video is earlier Arun ROS demonstration, not multiseed solver playback"
+  ],
+  "repository_author": "LittleHorseyaya",
+  "report_included": false,
+  "source_snapshot_note": "C++ and CMake copied byte-for-byte from the user-built final source snapshot; README and plotting paths reorganized for repository."
+}

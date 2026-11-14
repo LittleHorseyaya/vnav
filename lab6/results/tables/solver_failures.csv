@@ -1,0 +1,5 @@
+﻿seed,method,frame_id,image_time_s,status
+23456,nister,2359,169.104899999,solver_timeout
+34567,nister,3787,255.15489999900001,solver_timeout
+45678,nister,2962,207.20490000000001,solver_timeout
+56789,nister,3411,231.8049,solver_timeout

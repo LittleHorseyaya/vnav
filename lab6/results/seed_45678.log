@@ -1,0 +1,45 @@
+Shared bearing threshold=1e-06; 5pt/8pt both refined; OpenGV seed=45678; Arun threshold=0.05 m; per-method timeout=2 s
+Processed 100 shared frame pairs
+Processed 200 shared frame pairs
+Processed 300 shared frame pairs
+Processed 400 shared frame pairs
+Processed 500 shared frame pairs
+Processed 600 shared frame pairs
+Processed 700 shared frame pairs
+Processed 800 shared frame pairs
+Processed 900 shared frame pairs
+Processed 1000 shared frame pairs
+Processed 1100 shared frame pairs
+Processed 1200 shared frame pairs
+Processed 1300 shared frame pairs
+Processed 1400 shared frame pairs
+Processed 1500 shared frame pairs
+Processed 1600 shared frame pairs
+Processed 1700 shared frame pairs
+Processed 1800 shared frame pairs
+Processed 1900 shared frame pairs
+Processed 2000 shared frame pairs
+Processed 2100 shared frame pairs
+Processed 2200 shared frame pairs
+Processed 2300 shared frame pairs
+Processed 2400 shared frame pairs
+Processed 2500 shared frame pairs
+Processed 2600 shared frame pairs
+Processed 2700 shared frame pairs
+Processed 2800 shared frame pairs
+Processed 2900 shared frame pairs
+TIMEOUT seed=45678 frame=2962 time=207.20490000000001 method=nister limit=2 s
+Processed 3000 shared frame pairs
+Processed 3100 shared frame pairs
+Processed 3200 shared frame pairs
+Processed 3300 shared frame pairs
+Processed 3400 shared frame pairs
+Processed 3500 shared frame pairs
+Processed 3600 shared frame pairs
+Processed 3700 shared frame pairs
+Processed 3800 shared frame pairs
+nister: ok=3888/3889 translation mean=0.495622
+eightpt: ok=3889/3889 translation mean=0.371926
+twopt: ok=3889/3889 translation mean=0.0622471
+arun: ok=3889/3889 translation mean=0.00408731
+DONE. Prefix: /mnt/lab6_data/results/seed_validation_20261114_074955/seed_45678
